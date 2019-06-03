@@ -4,10 +4,10 @@
     {
       "label": "build-normal",
       "type": "shell",
-      "command": "pawncc",
+      "command": "pawncc", // pawncc compiler location, we suggest to add pawncc path into your environment
       "args": [
-        "grandlarc.pwn",
-        "-Dgamemodes",
+        "grandlarc.pwn", // source file of gamemode
+        "-Dgamemodes", // Additional compiler arguments  
         "-;+",
         "-(+",
         "-d3"
