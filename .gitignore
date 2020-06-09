@@ -6,3 +6,5 @@ node_modules
 /pawn-community-tool-0.1.0.vsix
 /package-lock.json
 /.vscodeignore
+/.vscode-test
+/.vscode
