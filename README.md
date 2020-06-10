@@ -1,12 +1,20 @@
 # pawn-community-tool
 Pawn Tool for Developing Scripts for Indian Ocean Roleplay™
 
+## Features
+ * Syntax Highlighting
+ * Auto Code Completion
+ * Pawn Formatter
+
 ## Installation
 
 Just search for "Pawn Community Tool" in the vscode extensions and install it.
 
 Alternatively, you can check out the source code or view the marketplace page:
 
+* [Website](https://iorp.in/)
+* [Forum](https://forum.iorp.in/)
+* [Discord](https://forum.iorp.in/)
 * [GitHub Page](https://github.com/oceanroleplay/pawn-community-tool)
 * [Marketplace Page](https://marketplace.visualstudio.com/items?itemName=IORP.pawn-community-tool)
 
