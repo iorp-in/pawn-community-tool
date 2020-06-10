@@ -20,6 +20,7 @@ const PawnDocumentFormattingEditProvider = {
         content = content.replace(/if(\s+)\(/gm, "if(");
         content = content.replace(/>(\s+)\nhook/gm, ">\nhook");
         content = content.replace(/static(\s+)const/gm, "static const");
+        content = content.replace(/\.\s\./gm, "..");
         const range = new vscode.Range(new vscode.Position(0, 0), document.lineAt(document.lineCount - 1).range.end);
         edits.push(new vscode.TextEdit(range, content));
         return edits;
@@ -42,6 +43,7 @@ const PawnDocumentFormattingEditProvider = {
         content = content.replace(/if(\s+)\(/gm, "if(");
         content = content.replace(/>(\s+)\nhook/gm, ">\nhook");
         content = content.replace(/static(\s+)const/gm, "static const");
+        content = content.replace(/\.\s\./gm, "..");
         edits.push(new vscode.TextEdit(range, content));
         return edits;
     }
