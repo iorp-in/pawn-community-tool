@@ -38,7 +38,7 @@
         "onCommand:pawn-community-tool.initTask",
         "onLanguage:pawn"
     ],
-    "main": "./out/extension.js",
+    "main": "./out/client/extension.js",
     "contributes": {
         "languages": [
             {
@@ -68,6 +68,67 @@
                 "path": "./snippets/pawn.json"
             }
         ],
+        "configuration": {
+            "id": "pawn",
+            "type": "object",
+            "title": "pawn Configuration",
+            "properties": {
+                "pawn.language.reparseInterval": {
+                    "type": "number",
+                    "default": 1500,
+                    "description": "The shortest allowed interval between two syntax re-parses of the same file"
+                },
+                "pawn.language.webApiLinks": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Should #include statements that contain filenames from pawn package link to the Web API Reference"
+                },
+                "pawn.compiler.executablePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Compiler location"
+                },
+                "pawn.compiler.includePaths": {
+                    "type": "array",
+                    "default": [],
+                    "description": "An array of strings containing include paths for the compiler"
+                },
+                "pawn.compiler.options": {
+                    "type": "array",
+                    "default": [],
+                    "description": "An array of additional options that should be passed to the compiler"
+                },
+                "pawn.compiler.showInfoMessages": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Shows additional information like command arguments and exit code when compiling"
+                },
+                "pawn.compiler.reformatOutput": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Should pawnpc output be reformatted to make it more readable"
+                },
+                "pawn.compiler.outputType": {
+                    "type": "string",
+                    "default": "source",
+                    "description": "Where should .pawn files be output. Can be:\n  - 'source' (same as input)\n  - 'path' (specified in pawn.compiler.outputPath setting)",
+                    "enum": [
+                        "source",
+                        "path"
+                    ]
+                },
+                "pawn.compiler.outputPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "If pawn.compiler.outputType is set to 'path', then use this path to output .pawn files"
+                },
+                "pawn.compiler.switchToOutput": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Switch to 'Output' tab on build"
+                }
+            }
+        },
         "problemMatchers": [
             {
                 "name": "pawncc",
