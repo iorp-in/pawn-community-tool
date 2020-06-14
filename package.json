@@ -62,12 +62,6 @@
                 "path": "./syntaxes/Pawn.tmLanguage"
             }
         ],
-        "snippets": [
-            {
-                "language": "pawn",
-                "path": "./snippets/pawn.json"
-            }
-        ],
         "configuration": {
             "id": "pawn",
             "type": "object",
