@@ -10,7 +10,6 @@ export const initSnippetCollector = async () => {
         if (files.hasOwnProperty(key)) {
             const element = files[key];
             const content = (await vscode.workspace.openTextDocument(element)).getText();
-            parseSnippets(content);
         }
     }
     const filesInc = await vscode.workspace.findFiles('**/*.inc');
@@ -18,7 +17,6 @@ export const initSnippetCollector = async () => {
         if (filesInc.hasOwnProperty(key)) {
             const element = filesInc[key];
             const content = (await vscode.workspace.openTextDocument(element)).getText();
-            parseSnippets(content);
         }
     }
 };
