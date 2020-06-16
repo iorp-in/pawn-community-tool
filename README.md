@@ -1,6 +1,8 @@
 # pawn-community-tool
 VS-Code extension for pawn language, code clean and better :)
 
+developed and maintained by Indian Ocean Roleplay™
+
 ## Features
  * Go To Definition
  * Hover Definition
