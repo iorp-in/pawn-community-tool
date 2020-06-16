@@ -8,11 +8,12 @@ interface PawnFunction {
     textDocument: TextDocument;
     completion: CompletionItem;
     definition: Definition;
-    params: ParameterInformation[];
+    params?: ParameterInformation[];
 }
 let pawnFuncCollection: Map<string, PawnFunction> = new Map();
 
-const regex = /(forward|native|stock)\s(.*?)\((.*?)\)/gm;
+const regex = /^(forward|native|stock)\s(.*?)\((.*?)\)/gm;
+const regexDefine = /^#define\s([A-Za-z_]*?)($|\s)/gm;
 export const parseSnippets = async (textDocument: TextDocument) => {
     pawnFuncCollection.forEach((value: PawnFunction, key: string) => {
         if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key);
@@ -20,6 +21,29 @@ export const parseSnippets = async (textDocument: TextDocument) => {
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
+        var defineAuto;
+        do {
+            defineAuto = regexDefine.exec(cont);
+            if (defineAuto) {
+                const newSnip: CompletionItem = {
+                    label: defineAuto[1],
+                    kind: CompletionItemKind.Text,
+                    insertText: defineAuto[1]
+                };
+                const newDef: Definition = Location.create(textDocument.uri, {
+                    start: { line: index, character: defineAuto.input.indexOf(defineAuto[1]) },
+                    end: { line: index, character: defineAuto.input.indexOf(defineAuto[1]) + defineAuto[1].length }
+
+                });
+                const pwnFun: PawnFunction = {
+                    textDocument: textDocument,
+                    completion: newSnip,
+                    definition: newDef
+                };
+                const findSnip = pawnFuncCollection.get(defineAuto[1]);
+                if (findSnip === undefined) pawnFuncCollection.set(defineAuto[1], pwnFun);
+            }
+        } while (defineAuto);
         var m;
         do {
             m = regex.exec(cont);
