@@ -8,3 +8,4 @@ node_modules
 /.vscodeignore
 /.vscode-test
 /.vscode
+/snippets
