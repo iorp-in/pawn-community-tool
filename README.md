@@ -1,5 +1,5 @@
 # pawn-community-tool
-Pawn Tool for Developing Scripts for Indian Ocean Roleplay™
+VS-Code extension for pawn language, code clean and better :)
 
 ## Features
  * Go To Definition
