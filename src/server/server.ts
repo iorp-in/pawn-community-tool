@@ -1,27 +1,6 @@
 import {
-    createConnection,
-    TextDocuments,
-    Diagnostic,
-    DiagnosticSeverity,
-    ProposedFeatures,
-    InitializeParams,
-    DidChangeConfigurationNotification,
-    CompletionItem,
-    CompletionItemKind,
-    TextDocumentPositionParams,
-    TextDocumentSyncKind,
-    Location,
-    Definition,
-    TextDocumentIdentifier,
-    Hover,
-    DefinitionParams,
-    MarkedString,
-    SignatureInformation,
-    ParameterInformation,
-    SignatureHelpParams,
-    SignatureHelp,
-    CompletionList,
-    CompletionParams
+    createConnection, TextDocuments, ProposedFeatures, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind,
+    Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList
 } from 'vscode-languageserver';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -32,7 +11,7 @@ let documents = new TextDocuments(TextDocument);
 documents.listen(connection);
 connection.listen();
 
-connection.onInitialize((params: InitializeParams) => {
+connection.onInitialize(() => {
     return {
         capabilities: {
             textDocumentSync: TextDocumentSyncKind.Full,
@@ -53,11 +32,11 @@ connection.onInitialized(() => {
 });
 
 
-connection.onDidChangeConfiguration(change => {
+connection.onDidChangeConfiguration(() => {
     documents.all().forEach(parseSnippets);
 });
 
-documents.onDidClose(e => {
+documents.onDidClose(() => {
 });
 
 documents.onDidChangeContent(change => {

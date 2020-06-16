@@ -2,9 +2,13 @@
 Pawn Tool for Developing Scripts for Indian Ocean Roleplay™
 
 ## Features
+ * Go To Definition
+ * Hover Definition
+ * Parameter Helper
  * Syntax Highlighting
  * Auto Code Completion
- * Pawn Formatter
+ * Format Document
+ * Format Selection
 
 ## Installation
 
