@@ -18,9 +18,9 @@ Just search for "Pawn Community Tool" in the vscode extensions and install it.
 
 Alternatively, you can check out the source code or view the marketplace page:
 
-* [Website](https://iorp.in/)
-* [Forum](https://forum.iorp.in/)
-* [Discord](https://forum.iorp.in/)
+* [Website](https://iorp.in)
+* [Forum](https://forum.iorp.in)
+* [Discord](https://discord.gg/Xq9k3hr)
 * [GitHub Page](https://github.com/oceanroleplay/pawn-community-tool)
 * [Marketplace Page](https://marketplace.visualstudio.com/items?itemName=IORP.pawn-community-tool)
 
