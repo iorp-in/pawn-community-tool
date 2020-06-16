@@ -72,6 +72,11 @@ export const parseSnippets = async (textDocument: TextDocument) => {
                     completion: newSnip,
                     params
                 };
+                const indexPos = m[2].indexOf(':');
+                if (indexPos !== -1) {
+                    const resOut = /:(.*)/gm.exec(m[2]);
+                    if (resOut) m[2] = resOut[1];
+                }
                 const findSnip = pawnFuncCollection.get(m[2]);
                 if (findSnip === undefined) pawnFuncCollection.set(m[2], pwnFun);
             }
