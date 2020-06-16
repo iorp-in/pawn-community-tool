@@ -70,25 +70,19 @@ connection.onDidChangeWatchedFiles(_change => {
 connection.onDefinition((textDocumentIdentifier: DefinitionParams) => {
     const doc = documents.get(textDocumentIdentifier.textDocument.uri);
     if (doc === undefined) return;
-    const ofs = doc.offsetAt(textDocumentIdentifier.position);
-    if (ofs === undefined) return;
-    return doGoToDef(doc, ofs);
+    return doGoToDef(doc, textDocumentIdentifier.position);
 });
 
 connection.onHover((params: TextDocumentPositionParams): Hover | undefined => {
     const doc = documents.get(params.textDocument.uri);
     if (doc === undefined) return;
-    const ofs = doc.offsetAt(params.position);
-    if (ofs === undefined) return;
-    return doHover(doc, ofs);
+    return doHover(doc, params.position);
 });
 
 connection.onSignatureHelp((params: SignatureHelpParams): SignatureHelp | undefined => {
     const doc = documents.get(params.textDocument.uri);
     if (doc === undefined) return;
-    const ofs = doc.offsetAt(params.position);
-    if (ofs === undefined) return;
-    return doSignHelp(doc, ofs);
+    return doSignHelp(doc, params.position);
 });
 
 connection.onCompletion(

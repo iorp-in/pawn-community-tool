@@ -1,7 +1,12 @@
-import { TextDocument, CompletionItem, CompletionItemKind, Definition, Location, Range, MarkedString, Hover, SignatureHelp } from "vscode-languageserver";
+import { TextDocument, CompletionItem, CompletionItemKind, Definition, Location, Range, MarkedString, Hover, SignatureHelp, Position, SignatureHelpParams, ParameterInformation } from "vscode-languageserver";
+import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor } from "./common";
 
-let snippetCollection: Map<string, CompletionItem> = new Map();
-let definationCollection: Map<string, Definition> = new Map();
+interface PawnFunction {
+    completion: CompletionItem;
+    definition: Definition;
+    params: ParameterInformation[];
+}
+let pawnFuncCollection: Map<string, PawnFunction> = new Map();
 
 const regex = /(forward|native|stock)\s(.*?)\((.*?)\)/gm;
 export const parseSnippets = async (textDocument: TextDocument) => {
@@ -18,15 +23,24 @@ export const parseSnippets = async (textDocument: TextDocument) => {
                     insertText: m[2] + '(' + m[3] + ')',
                     documentation: m[2] + '(' + m[3] + ')',
                 };
-                const findSnip = snippetCollection.get(m[2]);
-                if (findSnip === undefined) snippetCollection.set(m[2], newSnip);
-                const findDef = definationCollection.get(m[2]);
                 const newDef: Definition = Location.create(textDocument.uri, {
                     start: { line: index, character: m.input.indexOf(m[2]) },
                     end: { line: index, character: m.input.indexOf(m[2]) + m[2].length }
 
                 });
-                if (findDef === undefined) definationCollection.set(m[2], newDef);
+                let params: ParameterInformation[] = [];
+                if (m[3].trim().length > 0) {
+                    params = m[3].split(',').map((value) => ({ label: value.trim() }));
+                } else {
+                    params = [];
+                }
+                const pwnFun: PawnFunction = {
+                    definition: newDef,
+                    completion: newSnip,
+                    params
+                };
+                const findSnip = pawnFuncCollection.get(m[2]);
+                if (findSnip === undefined) pawnFuncCollection.set(m[2], pwnFun);
             }
         } while (m);
     });
@@ -34,64 +48,52 @@ export const parseSnippets = async (textDocument: TextDocument) => {
 };
 
 export const doCompletion = async () => {
-    return Array.from(snippetCollection.values());
+    const comItems: CompletionItem[] = [];
+    pawnFuncCollection.forEach(res => comItems.push(res.completion));
+    return comItems;
 };
 
 export const doCompletionResolve = async (item: CompletionItem) => {
     return item;
 };
 
-export const doHover = (document: TextDocument, offset: number): Hover | undefined => {
-    const word = getCurrentWord(document, offset);
-    const snip = snippetCollection.get(word);
+export const doHover = (document: TextDocument, position: Position): Hover | undefined => {
+    const cursorIndex = positionToIndex(document.getText(), position);
+    const result = findIdentifierAtCursor(document.getText(), cursorIndex);
+    const snip = pawnFuncCollection.get(result.identifier);
     if (snip === undefined) return undefined;
     let c: MarkedString[] = [];
-    if (snip.label !== undefined) c.push(`# ${snip.label}`);
-    if (snip.documentation !== undefined) c.push(`${snip.documentation}`);
+    if (snip.completion.label !== undefined) c.push(`# ${snip.completion.label}`);
+    if (snip.completion.documentation !== undefined) c.push(`${snip.completion.documentation}`);
     return {
         contents: c
     };
 };
 
-export const doSignHelp = (document: TextDocument, offset: number): SignatureHelp | undefined => {
-    const word = getCurrentWord(document, offset);
-    const snip = snippetCollection.get(word);
+export const doSignHelp = (document: TextDocument, position: Position): SignatureHelp | undefined => {
+    const cursorIndex = positionToIndex(document.getText(), position);
+    const result = findFunctionIdentifier(document.getText(), cursorIndex);
+    if (result.identifier === '') return undefined;
+    const snip = pawnFuncCollection.get(result.identifier);
     if (snip === undefined) return undefined;
     let c: MarkedString[] = [];
-    if (snip.label !== undefined) c.push(`# ${snip.label}`);
-    if (snip.documentation !== undefined) c.push(`${snip.documentation}`);
+    if (snip.completion.label !== undefined) c.push(`# ${snip.completion.label}`);
+    if (snip.completion.documentation !== undefined) c.push(`${snip.completion.documentation}`);
     return {
         activeParameter: 0,
         activeSignature: 0,
         signatures: [{
-            label: snip.label,
-            parameters: [{
-                label: snip.label
-            }]
+            label: snip.completion.label,
+            parameters: snip.params,
+            documentation: snip.completion.documentation
         }]
     };
 };
 
-export const doGoToDef = (document: TextDocument, offset: number) => {
-    const word = getCurrentWord(document, offset);
-    const snip = definationCollection.get(word);
+export const doGoToDef = (document: TextDocument, position: Position) => {
+    const cursorIndex = positionToIndex(document.getText(), position);
+    const result = findIdentifierAtCursor(document.getText(), cursorIndex);
+    const snip = pawnFuncCollection.get(result.identifier);
     if (snip === undefined) return;
-    return snip;
+    return snip.definition;
 };
-
-const spaces: string = ' \t\n\r":{[()]},;-=><';
-export function getCurrentWord(document: TextDocument, offset: number) {
-    let i = offset - 1;
-    let text = document.getText();
-    while (i >= 0 && spaces.indexOf(text.charAt(i)) === -1) {
-        i--;
-    }
-
-    let j = offset;
-    while (j < text.length && spaces.indexOf(text.charAt(j)) === -1) {
-        j++;
-    }
-    return text.substring(i + 1, j).trim();
-}
-
-
