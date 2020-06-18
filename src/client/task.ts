@@ -9,7 +9,7 @@ export var task = `{
 				"instanceLimit": 1,
 			},
 			"args": [
-				"ior.pwn",
+				"\${relativeFile}",
 				"-Dgamemodes",
 				"-;+",
 				"-(+",

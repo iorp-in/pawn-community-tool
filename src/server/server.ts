@@ -1,6 +1,6 @@
 import {
     createConnection, TextDocuments, ProposedFeatures, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind,
-    Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList
+    Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList, CompletionParams
 } from 'vscode-languageserver';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -64,12 +64,10 @@ connection.onSignatureHelp((params: SignatureHelpParams): SignatureHelp | undefi
     return doSignHelp(doc, params.position);
 });
 
-connection.onCompletion(
-    async (_textDocumentPosition: TextDocumentPositionParams) => {
-        const c: CompletionList = { isIncomplete: false, items: await doCompletion() };
-        return c;
-    }
-);
+connection.onCompletion(async (params: CompletionParams) => {
+    const c: CompletionList = { isIncomplete: false, items: await doCompletion(params) };
+    return c;
+});
 
 connection.onCompletionResolve(
     async (item: CompletionItem): Promise<CompletionItem> => {

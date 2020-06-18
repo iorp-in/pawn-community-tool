@@ -3,7 +3,7 @@ import PawnDocumentFormattingEditProvider from './formatter';
 import * as vscode from 'vscode';
 import * as VLC from 'vscode-languageclient';
 import * as VLSC from 'vscode-languageserver';
-import provideCompletion, { initSnippetCollector } from './completionProvider';
+import { initSnippetCollector } from './commonFunc';
 import path = require('path');
 
 let client: VLC.LanguageClient;

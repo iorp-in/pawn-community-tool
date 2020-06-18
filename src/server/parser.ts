@@ -1,6 +1,7 @@
 import {
     TextDocument, CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position,
-    ParameterInformation
+    ParameterInformation,
+    CompletionParams
 } from "vscode-languageserver";
 import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor } from "./common";
 
@@ -12,27 +13,24 @@ interface PawnFunction {
 }
 let pawnFuncCollection: Map<string, PawnFunction> = new Map();
 
-const regex = /^(forward|native|stock)\s(.*?)\((.*?)\)/gm;
-const regexDefine = /^#define\s([A-Za-z_]*?)($|\s)/gm;
-export const parseSnippets = async (textDocument: TextDocument) => {
-    pawnFuncCollection.forEach((value: PawnFunction, key: string) => {
-        if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key);
-    });
+
+export const parseDefine = (textDocument: TextDocument) => {
+    const regexDefine = /^#define\s([A-Za-z_]*?)($|\s)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
-        var defineAuto;
+        var m;
         do {
-            defineAuto = regexDefine.exec(cont);
-            if (defineAuto) {
+            m = regexDefine.exec(cont);
+            if (m) {
                 const newSnip: CompletionItem = {
-                    label: defineAuto[1],
+                    label: m[1],
                     kind: CompletionItemKind.Text,
-                    insertText: defineAuto[1]
+                    insertText: m[1]
                 };
                 const newDef: Definition = Location.create(textDocument.uri, {
-                    start: { line: index, character: defineAuto.input.indexOf(defineAuto[1]) },
-                    end: { line: index, character: defineAuto.input.indexOf(defineAuto[1]) + defineAuto[1].length }
+                    start: { line: index, character: m.input.indexOf(m[1]) },
+                    end: { line: index, character: m.input.indexOf(m[1]) + m[1].length }
 
                 });
                 const pwnFun: PawnFunction = {
@@ -40,10 +38,18 @@ export const parseSnippets = async (textDocument: TextDocument) => {
                     completion: newSnip,
                     definition: newDef
                 };
-                const findSnip = pawnFuncCollection.get(defineAuto[1]);
-                if (findSnip === undefined) pawnFuncCollection.set(defineAuto[1], pwnFun);
+                const findSnip = pawnFuncCollection.get(m[1]);
+                if (findSnip === undefined) pawnFuncCollection.set(m[1], pwnFun);
             }
-        } while (defineAuto);
+        } while (m);
+    });
+};
+
+export const parsefuncs = (textDocument: TextDocument) => {
+    const regex = /^(forward|native|stock)\s(.*?)\((.*?)\)/gm;
+    const content = textDocument.getText();
+    const splitContent = content.split('\n');
+    splitContent.forEach((cont: string, index: number) => {
         var m;
         do {
             m = regex.exec(cont);
@@ -106,12 +112,59 @@ export const parseSnippets = async (textDocument: TextDocument) => {
             }
         } while (m);
     });
-
 };
 
-export const doCompletion = async () => {
+let pawnWords: Map<string, CompletionItem[]> = new Map();
+
+export const parseWords = (textDocument: TextDocument) => {
+    const regex = /[A-Za-z_]+/gm;
+    const content = textDocument.getText();
+    const splitContent = content.split('\n');
+    const words: string[] = [];
+    const wordCompletion: CompletionItem[] = [];
+    splitContent.forEach((cont: string, index: number) => {
+        var m;
+        do {
+            m = regex.exec(cont);
+            if (m) {
+                if (words.indexOf(m[0]) === -1) words.push(m[0]);
+            }
+        } while (m);
+    });
+    for (const key in words) {
+        if (words.hasOwnProperty(key)) {
+            const element = words[key];
+            const newSnip: CompletionItem = {
+                label: element,
+                kind: CompletionItemKind.Text,
+                insertText: element
+            };
+            wordCompletion.push(newSnip);
+        }
+    }
+
+    const findSnip = pawnWords.get(textDocument.uri);
+    if (findSnip === undefined) pawnWords.set(textDocument.uri, wordCompletion);
+};
+
+export const parseSnippets = async (textDocument: TextDocument) => {
+    pawnFuncCollection.forEach((value: PawnFunction, key: string) => {
+        if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key);
+    });
+    const findSnip = pawnWords.get(textDocument.uri);
+    if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
+    parseDefine(textDocument);
+    parsefuncs(textDocument);
+    parseWords(textDocument);
+};
+
+export const doCompletion = async (params: CompletionParams) => {
     const comItems: CompletionItem[] = [];
     pawnFuncCollection.forEach(res => comItems.push(res.completion));
+    const findSnip = pawnWords.get(params.textDocument.uri);
+    if (findSnip !== undefined) {
+        findSnip.forEach(res => comItems.push(res));
+    }
     return comItems;
 };
 
