@@ -12,6 +12,14 @@ developed and maintained by Indian Ocean Roleplay™
  * Format Document
  * Format Selection
 
+## Define Custom Snippet Anywhere
+
+```
+/*
+    #defineSnip init_cmd cmd:function(playerid, params[]) { return 1; }
+*/
+```
+
 ## Installation
 
 Just search for "Pawn Community Tool" in the vscode extensions and install it.

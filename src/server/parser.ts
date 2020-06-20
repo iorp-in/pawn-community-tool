@@ -45,6 +45,38 @@ export const parseDefine = (textDocument: TextDocument) => {
     });
 };
 
+export const parseCustomSnip = (textDocument: TextDocument) => {
+    const regexDefine = /#defineSnip\s(.*?)\s(.*)/gm;
+    const content = textDocument.getText();
+    const splitContent = content.split('\n');
+    splitContent.forEach((cont: string, index: number) => {
+        var m;
+        do {
+            m = regexDefine.exec(cont);
+            if (m) {
+                const newSnip: CompletionItem = {
+                    label: m[1],
+                    kind: CompletionItemKind.Text,
+                    insertText: m[2],
+                    documentation: 'custom autocomplete snippet'
+                };
+                const newDef: Definition = Location.create(textDocument.uri, {
+                    start: { line: index, character: m.input.indexOf(m[1]) },
+                    end: { line: index, character: m.input.indexOf(m[1]) + m[1].length }
+
+                });
+                const pwnFun: PawnFunction = {
+                    textDocument: textDocument,
+                    completion: newSnip,
+                    definition: newDef
+                };
+                const findSnip = pawnFuncCollection.get(m[1]);
+                if (findSnip === undefined) pawnFuncCollection.set(m[1], pwnFun);
+            }
+        } while (m);
+    });
+};
+
 export const parsefuncs = (textDocument: TextDocument) => {
     const regex = /^(forward|native|stock)\s(.*?)\((.*?)\)/gm;
     const content = textDocument.getText();
@@ -154,6 +186,7 @@ export const parseSnippets = async (textDocument: TextDocument) => {
     const findSnip = pawnWords.get(textDocument.uri);
     if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
     parseDefine(textDocument);
+    parseCustomSnip(textDocument);
     parsefuncs(textDocument);
     parseWords(textDocument);
 };
