@@ -41,13 +41,26 @@ export const findFunctionIdentifier = (content: string, cursorIndex: number): Fi
     let parenthesisDepth = 0;
     let identifier = '';
     let parameterIndex = 0;
+    let inString = false;
 
     while (index >= 0) {
         // We surely know that we shouldn't search further if we encounter a semicolon
         if (content[index] === ';') {
             return { identifier: '', parameterIndex: 0 };
         }
-        if (content[index] === ',' && parenthesisDepth === 0) {
+        if (inString && content[index] === '"' && parenthesisDepth > 0) {
+            inString = false;
+            --parenthesisDepth;
+            --index;
+            continue;
+        }
+        if (!inString && content[index] === '"' && parenthesisDepth === 0) {
+            inString = true;
+            ++parenthesisDepth;
+            --index;
+            continue;
+        }
+        if (!inString && content[index] === ',' && parenthesisDepth === 0) {
             ++parameterIndex;
         }
         if (content[index] === ')') { // Ignore the next '(', it's a nested call
