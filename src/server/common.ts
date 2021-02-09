@@ -48,7 +48,7 @@ export const findFunctionIdentifier = (content: string, cursorIndex: number): Fi
         if (content[index] === ';') {
             return { identifier: '', parameterIndex: 0 };
         }
-        if (inString && content[index] === '"' && parenthesisDepth > 0) {
+        if (inString && content[index] === '"' && parenthesisDepth > 0 && content[index - 1] !== '\\') {
             inString = false;
             --parenthesisDepth;
             --index;

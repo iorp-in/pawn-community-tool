@@ -157,7 +157,7 @@
         "publish": "vsce publish minor"
     },
     "dependencies": {
-        "@types/json5": "0.0.30",
+        "@types/json5": "^2.2.0",
         "@types/minimatch": "^3.0.3",
         "@types/vscode": "^1.53.0",
         "fs": "0.0.1-security",
@@ -168,7 +168,7 @@
         "minimatch": "^3.0.4",
         "path": "^0.12.7",
         "vscode-languageclient": "^7.0.0",
-        "vscode-languageserver": "^6.1.1",
+        "vscode-languageserver": "^7.0.0",
         "vscode-languageserver-textdocument": "^1.0.1"
     },
     "devDependencies": {

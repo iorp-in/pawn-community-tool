@@ -1,4 +1,4 @@
-import { CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position, ParameterInformation, CompletionParams } from "vscode-languageserver";
+import { CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position, ParameterInformation, CompletionParams, MarkupContent, MarkupKind } from "vscode-languageserver";
 import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor } from "./common";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
@@ -207,11 +207,18 @@ export const doHover = (document: TextDocument, position: Position): Hover | und
     const result = findIdentifierAtCursor(document.getText(), cursorIndex);
     const snip = pawnFuncCollection.get(result.identifier);
     if (snip === undefined) return undefined;
-    let c: MarkedString[] = [];
-    if (snip.completion.label !== undefined) c.push(`${snip.completion.label}`);
-    if (snip.completion.documentation !== undefined) c.push(`${snip.completion.documentation}`);
+    let markdown: MarkupContent = {
+        kind: MarkupKind.Markdown,
+        value: [
+            '```pawn',
+            (snip.completion.label !== undefined && snip.completion.label),
+            '```',
+            '---',
+            (snip.completion.documentation !== undefined && snip.completion.documentation.toString())
+        ].join('\n')
+    };
     return {
-        contents: c
+        contents: markdown
     };
 };
 
@@ -221,9 +228,6 @@ export const doSignHelp = (document: TextDocument, position: Position): Signatur
     if (result.identifier === '') return undefined;
     const snip = pawnFuncCollection.get(result.identifier);
     if (snip === undefined) return undefined;
-    let c: MarkedString[] = [];
-    if (snip.completion.label !== undefined) c.push(`# ${snip.completion.label}`);
-    if (snip.completion.documentation !== undefined) c.push(`${snip.completion.documentation}`);
     return {
         activeParameter: 0,
         activeSignature: 0,

@@ -1,7 +1,7 @@
 import {
     createConnection, TextDocuments, ProposedFeatures, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind,
     Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList, CompletionParams
-} from 'vscode-languageserver';
+} from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp } from './parser';
