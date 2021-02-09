@@ -1,9 +1,6 @@
-import {
-    TextDocument, CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position,
-    ParameterInformation,
-    CompletionParams
-} from "vscode-languageserver";
+import { CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position, ParameterInformation, CompletionParams } from "vscode-languageserver";
 import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor } from "./common";
+import { TextDocument } from "vscode-languageserver-textdocument";
 
 interface PawnFunction {
     textDocument: TextDocument;
@@ -233,7 +230,8 @@ export const doSignHelp = (document: TextDocument, position: Position): Signatur
         signatures: [{
             label: snip.completion.label,
             parameters: snip.params,
-            documentation: snip.completion.documentation
+            documentation: snip.completion.documentation,
+            activeParameter: result.parameterIndex
         }]
     };
 };

@@ -29,7 +29,7 @@ const formatPawn = (content: string) => {
         }
     }
     content = jsbeautifier.js_beautify(content, {
-        brace_style: 'collapse-preserve-inline'
+        brace_style: 'preserve-inline'
     });
     for (const key in afterFix) {
         if (afterFix.hasOwnProperty(key)) {
