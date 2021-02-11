@@ -199,6 +199,8 @@ export const doCompletion = async (params: CompletionParams) => {
 };
 
 export const doCompletionResolve = async (item: CompletionItem) => {
+    item.insertText = item.insertText?.replaceAll('\\n', '\n');
+    item.insertText = item.insertText?.replaceAll('\\t', '\t');
     return item;
 };
 
