@@ -11,6 +11,7 @@ developed and maintained by Indian Ocean Roleplay™
  * Auto Code Completion
  * Format Document
  * Format Selection
+ * Generate Numbers
 
 ## Define Custom Snippet Anywhere
 
