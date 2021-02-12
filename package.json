@@ -36,6 +36,7 @@
     ],
     "activationEvents": [
         "onCommand:pawn-community-tool.initTask",
+        "onCommand:pawn-community-tool.seq-num",
         "onLanguage:pawn"
     ],
     "main": "./out/client/extension.js",
@@ -143,7 +144,11 @@
         "commands": [
             {
                 "command": "pawn-community-tool.initTask",
-                "title": "Initialize Pawn Build Task"
+                "title": "Pawn Community Tool: Initialize Pawn Build Task"
+            },
+            {
+                "command": "pawn-community-tool.seq-num",
+                "title": "Pawn Community Tool: Generate Number Sequance"
             }
         ]
     },
