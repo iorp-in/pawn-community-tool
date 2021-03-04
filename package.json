@@ -35,6 +35,7 @@
         "new"
     ],
     "activationEvents": [
+        "onCommand:pawn-community-tool.initScanDir",
         "onCommand:pawn-community-tool.initTask",
         "onCommand:pawn-community-tool.seq-num",
         "onLanguage:pawn"
@@ -142,6 +143,10 @@
             }
         ],
         "commands": [
+            {
+                "command": "pawn-community-tool.initScanDir",
+                "title": "Pawn Community Tool: Initialize whitelisted paths for scanning definitions"
+            },
             {
                 "command": "pawn-community-tool.initTask",
                 "title": "Pawn Community Tool: Initialize Pawn Build Task"

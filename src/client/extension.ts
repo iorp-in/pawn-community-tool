@@ -5,6 +5,7 @@ import { initSnippetCollector } from './commonFunc';
 import path = require('path');
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { sequentialNumberGenerate } from './Sequance Generator';
+import WhiteListedTaskHandler from './whitelistedpaths';
 
 
 let client: LanguageClient;
@@ -12,6 +13,7 @@ let client: LanguageClient;
 export async function activate(context: vscode.ExtensionContext) {  // The server is implemented in node
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.seq-num', sequentialNumberGenerate));
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initTask', BuildTaskHandler));
+	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initScanDir', WhiteListedTaskHandler));
 	vscode.languages.registerDocumentFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 	vscode.languages.registerDocumentRangeFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 	initSnippetCollector();

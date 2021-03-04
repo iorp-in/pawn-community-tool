@@ -17,7 +17,7 @@ developed and maintained by Indian Ocean Roleplay™
 
 ```
 /*
-    #defineSnip init_cmd cmd:function(playerid, params[]) { return 1; }
+    #defineSnip init_cmd cmd:function(playerid, const params[]) {\n\treturn 1;\n}
 */
 ```
 
