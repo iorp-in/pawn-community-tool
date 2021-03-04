@@ -1,6 +1,6 @@
 import {
     createConnection, TextDocuments, ProposedFeatures, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind,
-    Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList, CompletionParams
+    Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList, CompletionParams, WorkspaceFolder
 } from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
@@ -8,10 +8,13 @@ import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, d
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
+export let openedWorkspaceList: WorkspaceFolder[] = [];
 documents.listen(connection);
 connection.listen();
 
-connection.onInitialize(() => {
+connection.onInitialize((InitializeParams) => {
+    if (InitializeParams.workspaceFolders !== null) openedWorkspaceList = openedWorkspaceList.concat(InitializeParams.workspaceFolders);
+
     return {
         capabilities: {
             textDocumentSync: TextDocumentSyncKind.Full,
@@ -23,12 +26,21 @@ connection.onInitialize(() => {
             hoverProvider: true,
             signatureHelpProvider: {
                 triggerCharacters: ['(', ',']
+            },
+            workspace: {
+                workspaceFolders: {
+                    supported: true
+                }
             }
         }
     };
 });
 
 connection.onInitialized(() => {
+    connection.workspace.onDidChangeWorkspaceFolders(_event => {
+        openedWorkspaceList = openedWorkspaceList.concat(_event.added);
+        _event.removed.forEach(ws => { openedWorkspaceList = openedWorkspaceList.filter(res => res.uri !== ws.uri); });
+    });
 });
 
 

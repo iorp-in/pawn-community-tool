@@ -9,9 +9,6 @@ const writeonfile = `// only relative path are allowed inside workspace
 // exmaples of folders:
 // gamemodes
 // pawno/include
-
-gamemodes
-pawno/include
 `;
 
 const WhiteListedTaskHandler = async function () {

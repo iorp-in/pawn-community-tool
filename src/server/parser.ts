@@ -1,6 +1,10 @@
 import { CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position, ParameterInformation, CompletionParams, MarkupContent, MarkupKind } from "vscode-languageserver";
 import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor } from "./common";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { openedWorkspaceList } from "./server";
+import * as fs from 'fs';
+import * as url from 'url';
+import * as path from 'path';
 
 interface PawnFunction {
     textDocument: TextDocument;
@@ -176,12 +180,39 @@ export const parseWords = (textDocument: TextDocument) => {
     if (findSnip === undefined) pawnWords.set(textDocument.uri, wordCompletion);
 };
 
+export const getTextDocumentWorkspacePath = (textDocument: TextDocument) => {
+    for (const workspace of openedWorkspaceList) {
+        if (RegExp(workspace.uri).test(textDocument.uri)) return workspace;
+    }
+    return undefined;
+};
+
 export const parseSnippets = async (textDocument: TextDocument) => {
     pawnFuncCollection.forEach((value: PawnFunction, key: string) => {
         if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key);
     });
     const findSnip = pawnWords.get(textDocument.uri);
     if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
+
+    const workspace = getTextDocumentWorkspacePath(textDocument);
+    if (workspace !== undefined) {
+        const whiteListedPathFile = path.join(url.fileURLToPath(workspace.uri), "/.vscode/pawn-community-tool-whitelisted-paths.txt");
+        if (fs.existsSync(whiteListedPathFile)) {
+            const data = fs.readFileSync(whiteListedPathFile, { encoding: 'utf-8' });
+            const allLines = data.split("\n").filter(line => line.length > 0);
+            if (allLines.length > 0) {
+                for (const line of allLines) {
+                    if (!RegExp(/^\/\/ .*/).test(line)) {
+                        const filePath = url.fileURLToPath(textDocument.uri);
+                        const workspaceWhitlistedPath = path.join(url.fileURLToPath(workspace.uri), line);
+                        if (!RegExp(url.pathToFileURL(workspaceWhitlistedPath).toString()).test(url.pathToFileURL(filePath).toString())) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
     parseDefine(textDocument);
     parseCustomSnip(textDocument);
     parsefuncs(textDocument);
