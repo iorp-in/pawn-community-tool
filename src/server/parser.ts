@@ -14,6 +14,9 @@ interface PawnFunction {
 }
 let pawnFuncCollection: Map<string, PawnFunction> = new Map();
 
+export const resetAutocompletes = () => {
+    pawnFuncCollection.clear();
+};
 
 export const parseDefine = (textDocument: TextDocument) => {
     const regexDefine = /^#define\s([A-Za-z_]*?)($|\s)/gm;
@@ -196,7 +199,7 @@ export const parseSnippets = async (textDocument: TextDocument) => {
 
     const workspace = getTextDocumentWorkspacePath(textDocument);
     if (workspace !== undefined) {
-        const whiteListedPathFile = path.join(url.fileURLToPath(workspace.uri), "/.vscode/pawn-community-tool-whitelisted-paths.txt");
+        const whiteListedPathFile = path.join(url.fileURLToPath(workspace.uri), "/.pawnignore");
         if (fs.existsSync(whiteListedPathFile)) {
             const data = fs.readFileSync(whiteListedPathFile, { encoding: 'utf-8' });
             const allLines = data.split("\n").filter(line => line.length > 0);
@@ -205,7 +208,7 @@ export const parseSnippets = async (textDocument: TextDocument) => {
                     if (!RegExp(/^\/\/ .*/).test(line)) {
                         const filePath = url.fileURLToPath(textDocument.uri);
                         const workspaceWhitlistedPath = path.join(url.fileURLToPath(workspace.uri), line);
-                        if (!RegExp(url.pathToFileURL(workspaceWhitlistedPath).toString()).test(url.pathToFileURL(filePath).toString())) {
+                        if (RegExp(url.pathToFileURL(workspaceWhitlistedPath).toString()).test(url.pathToFileURL(filePath).toString())) {
                             return;
                         }
                     }

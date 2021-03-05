@@ -36,6 +36,7 @@
     ],
     "activationEvents": [
         "onCommand:pawn-community-tool.initScanDir",
+        "onCommand:pawn-community-tool.pawnignore",
         "onCommand:pawn-community-tool.initTask",
         "onCommand:pawn-community-tool.seq-num",
         "onLanguage:pawn"
@@ -50,6 +51,7 @@
                     "pawn"
                 ],
                 "extensions": [
+                    ".pawnignore",
                     ".p",
                     ".pwn",
                     ".inc"
@@ -145,7 +147,7 @@
         "commands": [
             {
                 "command": "pawn-community-tool.initScanDir",
-                "title": "Pawn Community Tool: Initialize whitelisted paths for scanning definitions"
+                "title": "Pawn Community Tool: Initialize .pawnignore"
             },
             {
                 "command": "pawn-community-tool.initTask",
@@ -154,8 +156,20 @@
             {
                 "command": "pawn-community-tool.seq-num",
                 "title": "Pawn Community Tool: Generate Number Sequance"
+            },
+            {
+                "command": "pawn-community-tool.pawnignore",
+                "title": "Add to .pawnignore"
             }
-        ]
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "pawn-community-tool.pawnignore",
+                    "group": "navigation"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

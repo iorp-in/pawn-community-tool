@@ -4,7 +4,7 @@ import {
 } from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp } from './parser';
+import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp, resetAutocompletes } from './parser';
 
 let connection = createConnection(ProposedFeatures.all);
 let documents = new TextDocuments(TextDocument);
@@ -43,6 +43,10 @@ connection.onInitialized(() => {
     });
 });
 
+connection.onNotification("revalidateAllOpenedDocuments", () => {
+    resetAutocompletes();
+    documents.all().forEach(parseSnippets);
+});
 
 connection.onDidChangeConfiguration(() => {
     documents.all().forEach(parseSnippets);

@@ -5,20 +5,24 @@ import { initSnippetCollector } from './commonFunc';
 import path = require('path');
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { sequentialNumberGenerate } from './Sequance Generator';
-import WhiteListedTaskHandler from './whitelistedpaths';
+import { addToPawnIgnore, InitPawnIgnore } from './whitelistedpaths';
 
-let client: LanguageClient;
+export let client: LanguageClient;
 
 export async function activate(context: vscode.ExtensionContext) {  // The server is implemented in node
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.seq-num', sequentialNumberGenerate));
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initTask', BuildTaskHandler));
-	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initScanDir', WhiteListedTaskHandler));
+	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initScanDir', InitPawnIgnore));
+	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.pawnignore', addToPawnIgnore));
 	vscode.languages.registerDocumentFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 	vscode.languages.registerDocumentRangeFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 
-	initSnippetCollector();
 	vscode.workspace.onDidChangeWorkspaceFolders(res => {
-		initSnippetCollector();
+		initSnippetCollector(true);
+	});
+
+	vscode.workspace.onDidSaveTextDocument(e => {
+		if (path.basename((e.fileName)) === ".pawnignore") initSnippetCollector(true);
 	});
 
 	let serverModule = context.asAbsolutePath(path.join('out', 'server', 'server.js'));
@@ -55,6 +59,9 @@ export async function activate(context: vscode.ExtensionContext) {  // The serve
 
 	// Start the client. This will also launch the server
 	client.start();
+	client.onReady().then(() => {
+		initSnippetCollector();
+	});
 }
 
 export function deactivate(): Thenable<void> | undefined {
