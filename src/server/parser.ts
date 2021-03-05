@@ -158,7 +158,7 @@ export const parsefuncs = (textDocument: TextDocument) => {
 };
 
 export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
-    const regex = /^(\s*)(\S*?)\((.*?)\)/gm;
+    const regex = /^(\S*?)\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -166,8 +166,8 @@ export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
         do {
             m = regex.exec(cont);
             if (m) {
-                let func = m[2];
-                let args = m[3];
+                let func = m[1];
+                let args = m[2];
                 let doc: string = '';
                 let endDoc = -1;
                 if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf('*/');
