@@ -183,20 +183,14 @@ export const parseWords = (textDocument: TextDocument) => {
     if (findSnip === undefined) pawnWords.set(textDocument.uri, wordCompletion);
 };
 
-export const getTextDocumentWorkspacePath = (textDocument: TextDocument) => {
+const getTextDocumentWorkspacePath = (textDocument: TextDocument) => {
     for (const workspace of openedWorkspaceList) {
         if (RegExp(workspace.uri).test(textDocument.uri)) return workspace;
     }
     return undefined;
 };
 
-export const parseSnippets = async (textDocument: TextDocument) => {
-    pawnFuncCollection.forEach((value: PawnFunction, key: string) => {
-        if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key);
-    });
-    const findSnip = pawnWords.get(textDocument.uri);
-    if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
-
+const isParseAllowed = (textDocument: TextDocument) => {
     const workspace = getTextDocumentWorkspacePath(textDocument);
     if (workspace !== undefined) {
         const whiteListedPathFile = path.join(url.fileURLToPath(workspace.uri), "/.pawnignore");
@@ -209,13 +203,21 @@ export const parseSnippets = async (textDocument: TextDocument) => {
                         const filePath = url.fileURLToPath(textDocument.uri);
                         const workspaceWhitlistedPath = path.join(url.fileURLToPath(workspace.uri), line);
                         if (RegExp(url.pathToFileURL(workspaceWhitlistedPath).toString()).test(url.pathToFileURL(filePath).toString())) {
-                            return;
+                            return false;
                         }
                     }
                 }
             }
         }
     }
+    return true;
+};
+
+export const parseSnippets = async (textDocument: TextDocument) => {
+    pawnFuncCollection.forEach((value: PawnFunction, key: string) => { if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key); });
+    const findSnip = pawnWords.get(textDocument.uri);
+    if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
+    if (!isParseAllowed(textDocument)) return;
     parseDefine(textDocument);
     parseCustomSnip(textDocument);
     parsefuncs(textDocument);
