@@ -94,7 +94,7 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
 };
 
 export const parsefuncs = (textDocument: TextDocument) => {
-    const regex = /^(\s*)(public|stock)\s([\S]{1,})\((.*?)\)(\s*\n*)\{/gm;
+    const regex = /^(\s*)(public|stock|function|func)\s+([\S]{1,})\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -170,7 +170,7 @@ export const parsefuncs = (textDocument: TextDocument) => {
 };
 
 export const parseNatives = (textDocument: TextDocument) => {
-    const regex = /^(\s*)(native)\s([\S]{1,})\((.*?)\)(\s*\n*)/gm;
+    const regex = /^(\s*)(native)\s([\S]{1,})\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -239,82 +239,6 @@ export const parseNatives = (textDocument: TextDocument) => {
                     pawnFuncCollection.set(func, pwnFun);
                 } else {
                     pawnFuncCollection.set(func, pwnFun);
-                }
-            }
-        } while (m);
-    });
-};
-
-export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
-    const regex = /^(\s*)([\S]{1,})\((.*?)\)(\s*\n*)\{/gm;
-    const content = textDocument.getText();
-    const splitContent = content.split('\n');
-    splitContent.forEach((cont: string, index: number) => {
-        var m;
-        do {
-            m = regex.exec(cont);
-            if (m) {
-                let func = m[2];
-                let args = m[3];
-                let doc: string = '';
-                let endDoc = -1;
-                if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf('*/');
-                if (endDoc !== -1) {
-                    let startDoc = -1;
-                    let inNum = index;
-                    while (inNum >= 0) {
-                        inNum--;
-                        if (splitContent[inNum] === undefined) continue;
-                        startDoc = splitContent[inNum].indexOf('/*');
-                        if (startDoc !== -1) {
-                            if (inNum === index) {
-                                doc = splitContent[index];
-                            } else if (inNum < index) {
-                                while (inNum < index) {
-                                    doc += splitContent[inNum] + '\n\n';
-                                    inNum++;
-
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-                doc = doc.replace('/*', '').replace('*/', '').trim();
-                const newSnip: CompletionItem = {
-                    label: func + '(' + args + ')',
-                    kind: CompletionItemKind.Function,
-                    insertText: func + '(' + args + ')',
-                    documentation: doc,
-                };
-                const newDef: Definition = Location.create(textDocument.uri, {
-                    start: { line: index, character: m.input.indexOf(func) },
-                    end: { line: index, character: m.input.indexOf(func) + func.length }
-
-                });
-                let params: ParameterInformation[] = [];
-                if (args.trim().length > 0) {
-                    params = args.split(',').map((value) => ({ label: value.trim() }));
-                } else {
-                    params = [];
-                }
-                const pwnFun: PawnFunction = {
-                    textDocument: textDocument,
-                    definition: newDef,
-                    completion: newSnip,
-                    params,
-                    type: 'function'
-                };
-                const indexPos = func.indexOf(':');
-                if (indexPos !== -1) {
-                    const resOut = /:(.*)/gm.exec(func);
-                    if (resOut) func = resOut[1];
-                }
-                const findSnip = pawnFuncCollection.get(func);
-                if (findSnip === undefined) {
-                    pawnFuncCollection.set(func, pwnFun);
-                } else {
-                    if (findSnip.type === 'macrofunction' || findSnip.type === 'macrodefine' || findSnip.type === 'customsnip') pawnFuncCollection.set(func, pwnFun);
                 }
             }
         } while (m);
@@ -467,7 +391,6 @@ export const parseSnippets = async (textDocument: TextDocument) => {
     if (!isParseAllowed(textDocument)) return;
     parseNatives(textDocument);
     parsefuncs(textDocument);
-    parsefuncsWithoutPrefix(textDocument);
     parseCustomSnip(textDocument);
     parsefuncsDefines(textDocument);
     parseDefine(textDocument);
