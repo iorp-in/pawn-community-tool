@@ -87,7 +87,7 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
 };
 
 export const parsefuncs = (textDocument: TextDocument) => {
-    const regex = /^(\s*)(public|native|stock)\s(\S*?)\((.*?)\)/gm;
+    const regex = /^(\s*)(public|native|stock)\s(\S\w*?)\((.*?)\)(\s*\n*)\{/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -158,7 +158,7 @@ export const parsefuncs = (textDocument: TextDocument) => {
 };
 
 export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
-    const regex = /^(\S*?)\((.*?)\)/gm;
+    const regex = /^(\s*)(\S\w*?)\((.*?)\)(\s*\n*)\{/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -166,8 +166,8 @@ export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
         do {
             m = regex.exec(cont);
             if (m) {
-                let func = m[1];
-                let args = m[2];
+                let func = m[2];
+                let args = m[3];
                 let doc: string = '';
                 let endDoc = -1;
                 if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf('*/');
@@ -229,7 +229,7 @@ export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
 };
 
 export const parsefuncsDefines = (textDocument: TextDocument) => {
-    const regex = /^(\s*)#define\s+(\S*?)\((.*?)\)/gm;
+    const regex = /^(\s*)#define\s+(\S\w*?)\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
