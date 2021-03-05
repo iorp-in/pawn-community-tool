@@ -232,6 +232,8 @@ export const parsefuncsDefines = (textDocument: TextDocument) => {
         do {
             m = regex.exec(cont);
             if (m) {
+                let func = m[1];
+                let args = m[2];
                 let doc: string = '';
                 let endDoc = -1;
                 if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf('*/');
@@ -258,19 +260,19 @@ export const parsefuncsDefines = (textDocument: TextDocument) => {
                 }
                 doc = doc.replace('/*', '').replace('*/', '').trim();
                 const newSnip: CompletionItem = {
-                    label: m[1] + '(' + m[2] + ')',
+                    label: func + '(' + args + ')',
                     kind: CompletionItemKind.Function,
-                    insertText: m[1] + '(' + m[2] + ')',
+                    insertText: func + '(' + args + ')',
                     documentation: doc,
                 };
                 const newDef: Definition = Location.create(textDocument.uri, {
-                    start: { line: index, character: m.input.indexOf(m[2]) },
-                    end: { line: index, character: m.input.indexOf(m[2]) + m[2].length }
+                    start: { line: index, character: m.input.indexOf(args) },
+                    end: { line: index, character: m.input.indexOf(args) + args.length }
 
                 });
                 let params: ParameterInformation[] = [];
-                if (m[2].trim().length > 0) {
-                    params = m[2].split(',').map((value) => ({ label: value.trim() }));
+                if (args.trim().length > 0) {
+                    params = args.split(',').map((value) => ({ label: value.trim() }));
                 } else {
                     params = [];
                 }
@@ -280,13 +282,13 @@ export const parsefuncsDefines = (textDocument: TextDocument) => {
                     completion: newSnip,
                     params
                 };
-                const indexPos = m[1].indexOf(':');
+                const indexPos = func.indexOf(':');
                 if (indexPos !== -1) {
-                    const resOut = /:(.*)/gm.exec(m[1]);
-                    if (resOut) m[1] = resOut[1];
+                    const resOut = /:(.*)/gm.exec(func);
+                    if (resOut) func = resOut[1];
                 }
-                const findSnip = pawnFuncCollection.get(m[1]);
-                if (findSnip === undefined) pawnFuncCollection.set(m[1], pwnFun);
+                const findSnip = pawnFuncCollection.get(func);
+                if (findSnip === undefined) pawnFuncCollection.set(func, pwnFun);
             }
         } while (m);
     });
