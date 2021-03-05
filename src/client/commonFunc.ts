@@ -6,18 +6,16 @@ export const initSnippetCollector = async (reset: boolean = false) => {
     for (const key in files) {
         if (files.hasOwnProperty(key)) {
             const element = files[key];
-            const content = (await vscode.workspace.openTextDocument(element)).getText();
+            (await vscode.workspace.openTextDocument(element)).getText();
         }
     }
     const filesInc = await vscode.workspace.findFiles('**/*.inc');
     for (const key in filesInc) {
         if (filesInc.hasOwnProperty(key)) {
             const element = filesInc[key];
-            const content = (await vscode.workspace.openTextDocument(element)).getText();
+            (await vscode.workspace.openTextDocument(element)).getText();
         }
     }
 
-    if (client !== undefined && reset) {
-        client.sendNotification("revalidateAllOpenedDocuments");
-    }
+    if (client !== undefined && reset) client.sendNotification("revalidateAllOpenedDocuments");
 };

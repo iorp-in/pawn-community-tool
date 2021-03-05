@@ -160,6 +160,10 @@
             {
                 "command": "pawn-community-tool.pawnignore",
                 "title": "Add to .pawnignore"
+            },
+            {
+                "command": "pawn-community-tool.reloadDefs",
+                "title": "Pawn Community Tool: reload definitions"
             }
         ],
         "menus": {

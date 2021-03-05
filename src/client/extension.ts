@@ -14,6 +14,7 @@ export async function activate(context: vscode.ExtensionContext) {  // The serve
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initTask', BuildTaskHandler));
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initScanDir', InitPawnIgnore));
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.pawnignore', addToPawnIgnore));
+	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.reloadDefs', () => { initSnippetCollector(true); }));
 	vscode.languages.registerDocumentFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 	vscode.languages.registerDocumentRangeFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 
