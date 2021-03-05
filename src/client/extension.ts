@@ -21,6 +21,10 @@ export async function activate(context: vscode.ExtensionContext) {  // The serve
 		initSnippetCollector(true);
 	});
 
+	vscode.workspace.onDidRenameFiles(e => {
+		initSnippetCollector(true);
+	});
+
 	vscode.workspace.onDidSaveTextDocument(e => {
 		if (path.basename((e.fileName)) === ".pawnignore") initSnippetCollector(true);
 	});
