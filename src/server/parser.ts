@@ -151,7 +151,7 @@ export const parsefuncs = (textDocument: TextDocument) => {
 };
 
 export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
-    const regex = /^([0-9A-Za-z:]*?)\((.*?)\)/gm;
+    const regex = /^(\S*?)\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
