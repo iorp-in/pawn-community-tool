@@ -82,7 +82,7 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
 };
 
 export const parsefuncs = (textDocument: TextDocument) => {
-    const regex = /^(public|native|stock)\s(.*?)\((.*?)\)/gm;
+    const regex = /^(public|native|stock)\s(\S*?)\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
