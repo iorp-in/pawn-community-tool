@@ -82,7 +82,7 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
 };
 
 export const parsefuncs = (textDocument: TextDocument) => {
-    const regex = /^(public|native|stock)\s(\S*?)\((.*?)\)/gm;
+    const regex = /^(\s*)(public|native|stock)\s(\S*?)\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -90,6 +90,8 @@ export const parsefuncs = (textDocument: TextDocument) => {
         do {
             m = regex.exec(cont);
             if (m) {
+                let func = m[3];
+                let args = m[4];
                 let doc: string = '';
                 let endDoc = -1;
                 if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf('*/');
@@ -116,19 +118,19 @@ export const parsefuncs = (textDocument: TextDocument) => {
                 }
                 doc = doc.replace('/*', '').replace('*/', '').trim();
                 const newSnip: CompletionItem = {
-                    label: m[2] + '(' + m[3] + ')',
+                    label: func + '(' + args + ')',
                     kind: CompletionItemKind.Function,
-                    insertText: m[2] + '(' + m[3] + ')',
+                    insertText: func + '(' + args + ')',
                     documentation: doc,
                 };
                 const newDef: Definition = Location.create(textDocument.uri, {
-                    start: { line: index, character: m.input.indexOf(m[2]) },
-                    end: { line: index, character: m.input.indexOf(m[2]) + m[2].length }
+                    start: { line: index, character: m.input.indexOf(func) },
+                    end: { line: index, character: m.input.indexOf(func) + func.length }
 
                 });
                 let params: ParameterInformation[] = [];
-                if (m[3].trim().length > 0) {
-                    params = m[3].split(',').map((value) => ({ label: value.trim() }));
+                if (args.trim().length > 0) {
+                    params = args.split(',').map((value) => ({ label: value.trim() }));
                 } else {
                     params = [];
                 }
@@ -138,20 +140,20 @@ export const parsefuncs = (textDocument: TextDocument) => {
                     completion: newSnip,
                     params
                 };
-                const indexPos = m[2].indexOf(':');
+                const indexPos = func.indexOf(':');
                 if (indexPos !== -1) {
-                    const resOut = /:(.*)/gm.exec(m[2]);
-                    if (resOut) m[2] = resOut[1];
+                    const resOut = /:(.*)/gm.exec(func);
+                    if (resOut) func = resOut[1];
                 }
-                const findSnip = pawnFuncCollection.get(m[2]);
-                if (findSnip === undefined) pawnFuncCollection.set(m[2], pwnFun);
+                const findSnip = pawnFuncCollection.get(func);
+                if (findSnip === undefined) pawnFuncCollection.set(func, pwnFun);
             }
         } while (m);
     });
 };
 
 export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
-    const regex = /^(\S*?)\((.*?)\)/gm;
+    const regex = /^(\s*)(\S*?)\((.*?)\)/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
@@ -159,6 +161,8 @@ export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
         do {
             m = regex.exec(cont);
             if (m) {
+                let func = m[2];
+                let args = m[3];
                 let doc: string = '';
                 let endDoc = -1;
                 if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf('*/');
@@ -185,19 +189,19 @@ export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
                 }
                 doc = doc.replace('/*', '').replace('*/', '').trim();
                 const newSnip: CompletionItem = {
-                    label: m[1] + '(' + m[2] + ')',
+                    label: func + '(' + args + ')',
                     kind: CompletionItemKind.Function,
-                    insertText: m[1] + '(' + m[2] + ')',
+                    insertText: func + '(' + args + ')',
                     documentation: doc,
                 };
                 const newDef: Definition = Location.create(textDocument.uri, {
-                    start: { line: index, character: m.input.indexOf(m[2]) },
-                    end: { line: index, character: m.input.indexOf(m[2]) + m[2].length }
+                    start: { line: index, character: m.input.indexOf(func) },
+                    end: { line: index, character: m.input.indexOf(func) + func.length }
 
                 });
                 let params: ParameterInformation[] = [];
-                if (m[2].trim().length > 0) {
-                    params = m[2].split(',').map((value) => ({ label: value.trim() }));
+                if (args.trim().length > 0) {
+                    params = args.split(',').map((value) => ({ label: value.trim() }));
                 } else {
                     params = [];
                 }
@@ -207,13 +211,13 @@ export const parsefuncsWithoutPrefix = (textDocument: TextDocument) => {
                     completion: newSnip,
                     params
                 };
-                const indexPos = m[1].indexOf(':');
+                const indexPos = func.indexOf(':');
                 if (indexPos !== -1) {
-                    const resOut = /:(.*)/gm.exec(m[1]);
-                    if (resOut) m[1] = resOut[1];
+                    const resOut = /:(.*)/gm.exec(func);
+                    if (resOut) func = resOut[1];
                 }
-                const findSnip = pawnFuncCollection.get(m[1]);
-                if (findSnip === undefined) pawnFuncCollection.set(m[1], pwnFun);
+                const findSnip = pawnFuncCollection.get(func);
+                if (findSnip === undefined) pawnFuncCollection.set(func, pwnFun);
             }
         } while (m);
     });
