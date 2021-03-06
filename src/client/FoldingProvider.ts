@@ -7,8 +7,8 @@ export default class PawnFoldingProvider implements vscode.FoldingRangeProvider 
     }
 }
 
-const start = RegExp(/^\/\/\sregion(.*)/gm); // code 1
-const end = RegExp(/^\/\/\sendregion(.*)/gm); // code 1
+const start = RegExp(/^\/\/(\s|#|@)region(.*)/gm); // code 1
+const end = RegExp(/^\/\/(\s|#|@)endregion(.*)/gm); // code 1
 const startComment = RegExp(/^\/\*(.*)/gm); // code 2
 const endComment = RegExp(/\*\/(.*)/gm); // code 2
 
@@ -49,17 +49,17 @@ function findFoldRanges(document: TextDocument) {
                 lastLineBlank = true;
                 continue;
             } else {
-                if (lastLineBlank && foldLineStart === null) {
-                    if (line.length > 0) {
-                        if (cCustomRegionCode === 0 && start.test(line)) cCustomRegionCode = 1;
-                        if (cCustomRegionCode === 0 && startComment.test(line) && !endComment.test(line)) cCustomRegionCode = 2;
-                        foldLineStart = i;
-                    }
-                }
                 if (foldLineStart !== null && ((cCustomRegionCode === 1 && end.test(line)) || (cCustomRegionCode === 2 && endComment.test(line)))) {
                     folds.push(new FoldingRange(foldLineStart, i - 1));
                     foldLineStart = null;
                     cCustomRegionCode = 0;
+                }
+                if (lastLineBlank && foldLineStart === null) {
+                    if (line.length > 0) {
+                        if (cCustomRegionCode === 0 && start.test(line)) cCustomRegionCode = 1;
+                        if (cCustomRegionCode === 0 && startComment.test(line) && !endComment.test(line)) cCustomRegionCode = 2;
+                        if (!RegExp(/^\/\/(.*)/gm).test(line)) foldLineStart = i;
+                    }
                 }
                 lastLineBlank = false;
             }
