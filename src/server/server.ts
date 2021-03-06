@@ -6,15 +6,12 @@ import {
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp, resetAutocompletes } from './parser';
 
-let connection = createConnection(ProposedFeatures.all);
-let documents = new TextDocuments(TextDocument);
-export let openedWorkspaceList: WorkspaceFolder[] = [];
+export let connection = createConnection(ProposedFeatures.all);
+export let documents = new TextDocuments(TextDocument);
 documents.listen(connection);
 connection.listen();
 
 connection.onInitialize((InitializeParams) => {
-    if (InitializeParams.workspaceFolders !== null) openedWorkspaceList = openedWorkspaceList.concat(InitializeParams.workspaceFolders);
-
     return {
         capabilities: {
             textDocumentSync: TextDocumentSyncKind.Full,
@@ -37,10 +34,6 @@ connection.onInitialize((InitializeParams) => {
 });
 
 connection.onInitialized(() => {
-    connection.workspace.onDidChangeWorkspaceFolders(_event => {
-        openedWorkspaceList = openedWorkspaceList.concat(_event.added);
-        _event.removed.forEach(ws => { openedWorkspaceList = openedWorkspaceList.filter(res => res.uri !== ws.uri); });
-    });
 });
 
 connection.onNotification("revalidateAllOpenedDocuments", () => {

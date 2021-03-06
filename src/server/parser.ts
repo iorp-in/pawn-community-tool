@@ -1,7 +1,7 @@
 import { CompletionItem, CompletionItemKind, Definition, Location, MarkedString, Hover, SignatureHelp, Position, ParameterInformation, CompletionParams, MarkupContent, MarkupKind } from "vscode-languageserver";
 import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor, isWhitespace } from "./common";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { openedWorkspaceList } from "./server";
+import { connection } from "./server";
 import * as fs from 'fs';
 import * as url from 'url';
 import * as path from 'path';
@@ -430,15 +430,17 @@ export const parseWords = (textDocument: TextDocument) => {
     if (findSnip === undefined) pawnWords.set(textDocument.uri, wordCompletion);
 };
 
-const getTextDocumentWorkspacePath = (textDocument: TextDocument) => {
-    for (const workspace of openedWorkspaceList) {
+const getTextDocumentWorkspacePath = async (textDocument: TextDocument) => {
+    const workspaceFolders = await connection.workspace.getWorkspaceFolders();
+    if (workspaceFolders === null) return undefined;
+    for (const workspace of workspaceFolders) {
         if (RegExp(workspace.uri).test(textDocument.uri)) return workspace;
     }
     return undefined;
 };
 
-const isParseAllowed = (textDocument: TextDocument) => {
-    const workspace = getTextDocumentWorkspacePath(textDocument);
+const isParseAllowed = async (textDocument: TextDocument) => {
+    const workspace = await getTextDocumentWorkspacePath(textDocument);
     if (workspace !== undefined) {
         const whiteListedPathFile = path.join(url.fileURLToPath(workspace.uri), "/.pawnignore");
         if (fs.existsSync(whiteListedPathFile)) {
@@ -465,13 +467,21 @@ export const parseSnippets = async (textDocument: TextDocument) => {
     const findSnip = pawnWords.get(textDocument.uri);
     if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
     if (!isParseAllowed(textDocument)) return;
-    parseNatives(textDocument);
-    parsefuncs(textDocument);
-    parsefuncsNonPrefix(textDocument);
-    parseCustomSnip(textDocument);
-    parsefuncsDefines(textDocument);
-    parseDefine(textDocument);
-    parseWords(textDocument);
+
+    const allowDefine = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowDefine' })) as true | false | null;
+    const allowDefineFunction = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowDefineFunction' })) as true | false | null;
+    const allowFunction = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowFunction' })) as true | false | null;
+    const allowNatives = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowNatives' })) as true | false | null;
+    const allowWords = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowWords' })) as true | false | null;
+    const allowCustomSnip = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowCustomSnip' })) as true | false | null;
+
+    if (allowNatives) parseNatives(textDocument);
+    if (allowFunction) parsefuncs(textDocument);
+    if (allowFunction) parsefuncsNonPrefix(textDocument);
+    if (allowCustomSnip) parseCustomSnip(textDocument);
+    if (allowDefineFunction) parsefuncsDefines(textDocument);
+    if (allowDefine) parseDefine(textDocument);
+    if (allowWords) parseWords(textDocument);
 };
 
 export const doCompletion = async (params: CompletionParams) => {

@@ -69,7 +69,7 @@
         "configuration": {
             "id": "pawn",
             "type": "object",
-            "title": "pawn Configuration",
+            "title": "Pawn Community Tool",
             "properties": {
                 "pawn.language.brace_style": {
                     "type": "string",
@@ -82,6 +82,36 @@
                         "end-expand",
                         "none"
                     ]
+                },
+                "pawn.language.allowDefine": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Allow to collect #define for auto completion"
+                },
+                "pawn.language.allowDefineFunction": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Allow to collect #define (function style) for auto completion"
+                },
+                "pawn.language.allowFunction": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Allow to collect functions for auto completion"
+                },
+                "pawn.language.allowNatives": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Allow to collect natives for auto completion"
+                },
+                "pawn.language.allowWords": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Allow to collect words from document for auto completion"
+                },
+                "pawn.language.allowCustomSnip": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "Allow to collect #defineSnip for auto completion"
                 }
             }
         },
