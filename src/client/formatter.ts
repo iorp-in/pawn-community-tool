@@ -22,6 +22,7 @@ const afterFix: RegexCodeFix[] = [
 ];
 
 const formatPawn = (content: string) => {
+    const brace_style = vscode.workspace.getConfiguration().get('pawn.language.brace_style') as "collapse" | "expand" | "end-expand" | "none" | "preserve-inline" | undefined;
     for (const key in beforeFix) {
         if (beforeFix.hasOwnProperty(key)) {
             const element = beforeFix[key];
@@ -29,7 +30,7 @@ const formatPawn = (content: string) => {
         }
     }
     content = jsbeautifier.js_beautify(content, {
-        brace_style: 'preserve-inline'
+        brace_style: brace_style
     });
     for (const key in afterFix) {
         if (afterFix.hasOwnProperty(key)) {

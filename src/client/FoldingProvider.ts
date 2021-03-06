@@ -7,21 +7,21 @@ export default class PawnFoldingProvider implements vscode.FoldingRangeProvider 
     }
 }
 
-const start = RegExp(/\/\/\sregion(.*)/gm);
-const end = RegExp(/\/\/\sendregion(.*)/gm);
-const startComment = RegExp(/^\/\*(.*)/gm);
-const endComment = RegExp(/\*\/(.*)/gm);
+const start = RegExp(/\/\/\sregion(.*)/gm); // code 1
+const end = RegExp(/\/\/\sendregion(.*)/gm); // code 1
+const startComment = RegExp(/^\/\*(.*)/gm); // code 2
+const endComment = RegExp(/\*\/(.*)/gm); // code 2
 
 function findFoldRanges(document: TextDocument) {
     let folds: FoldingRange[] = [];
-    let cCustomRegion = false;
+    let cCustomRegionCode = 0;
     let lastLineBlank = false;
     let foldLineStart: number | null = null;
     for (var i = 0; i < document.lineCount; i++) {
-        let line = document.lineAt(i).text.trim();
+        let line = document.lineAt(i).text;
         if (i === 0 && line.length > 0) lastLineBlank = true, foldLineStart = i;
         if (!line) {
-            if (foldLineStart !== null && !cCustomRegion) {
+            if (foldLineStart !== null && cCustomRegionCode === 0) {
                 folds.push(new FoldingRange(foldLineStart, i - 1));
                 foldLineStart = null;
             }
@@ -30,14 +30,15 @@ function findFoldRanges(document: TextDocument) {
         } else {
             if (lastLineBlank && foldLineStart === null) {
                 if (line.length > 0) {
-                    if (start.test(line) || (startComment.test(line) && !endComment.test(line))) cCustomRegion = true;
+                    if (cCustomRegionCode === 0 && start.test(line)) cCustomRegionCode = 1;
+                    if (cCustomRegionCode === 0 && startComment.test(line) && !endComment.test(line)) cCustomRegionCode = 2;
                     foldLineStart = i;
                 }
             }
-            if (cCustomRegion && foldLineStart !== null && (end.test(line) || endComment.test(line))) {
+            if (foldLineStart !== null && ((cCustomRegionCode === 1 && end.test(line)) || (cCustomRegionCode === 2 && endComment.test(line)))) {
                 folds.push(new FoldingRange(foldLineStart, i - 1));
                 foldLineStart = null;
-                cCustomRegion = false;
+                cCustomRegionCode = 0;
             }
             lastLineBlank = false;
         }
