@@ -122,6 +122,11 @@
                     "type": "string",
                     "default": "(//#endregion)|(\\*/)|\\}",
                     "description": "regex expression for end of region\nproceed with caution, you can break this so leave default if you don't know about this."
+                },
+                "pawn.language.showLastLineOfRegion": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "enable to view last line of region section when it's collaped, if you select false then only first line will be visible."
                 }
             }
         },
