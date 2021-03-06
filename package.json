@@ -2,7 +2,7 @@
     "name": "pawn-community-tool",
     "displayName": "Pawn Community Tool",
     "description": "Pawn Tool for Developing Scripts for Indian Ocean Roleplay™",
-    "version": "1.66.0",
+    "version": "1.67.0",
     "publisher": "IORP",
     "engines": {
         "vscode": "^1.34.0"
@@ -115,12 +115,12 @@
                 },
                 "pawn.language.startRegion": {
                     "type": "string",
-                    "default": "(\/\/#region)|(\/\\*)|\\{",
+                    "default": "(//#region)|(/\\*)|\\{",
                     "description": "start of region\nproceed with caution, you can break this so leave default if you don't know about this."
                 },
                 "pawn.language.endRegion": {
                     "type": "string",
-                    "default": "(\/\/#endregion)|(\\*\/)|\\}",
+                    "default": "(//#endregion)|(\\*/)|\\}",
                     "description": "end of region\nproceed with caution, you can break this so leave default if you don't know about this."
                 }
             }
