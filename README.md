@@ -11,8 +11,10 @@ developed and maintained by Indian Ocean Roleplay™
 - Parameter Helper
 - Syntax Highlighting
 - Auto Code Completion
+- Custom Inline Snippets
 - Format Document
 - Format Selection
+- VSCode Regions
 - Generate Numbers
 
 # Define Custom Snippet Anywhere
