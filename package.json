@@ -112,6 +112,16 @@
                     "type": "boolean",
                     "default": "true",
                     "description": "Allow to collect #defineSnip for auto completion"
+                },
+                "pawn.language.startRegion": {
+                    "type": "string",
+                    "default": "(\/\/#region)|(\/\\*)|\\{",
+                    "description": "start of region\nproceed with caution, you can break this so leave default if you don't know about this."
+                },
+                "pawn.language.endRegion": {
+                    "type": "string",
+                    "default": "(\/\/#endregion)|(\\*\/)|\\}",
+                    "description": "end of region\nproceed with caution, you can break this so leave default if you don't know about this."
                 }
             }
         },
