@@ -466,7 +466,7 @@ export const parseSnippets = async (textDocument: TextDocument) => {
     pawnFuncCollection.forEach((value: PawnFunction, key: string) => { if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key); });
     const findSnip = pawnWords.get(textDocument.uri);
     if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
-    if (!isParseAllowed(textDocument)) return;
+    if (!await isParseAllowed(textDocument)) return;
 
     const allowDefine = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowDefine' })) as true | false | null;
     const allowDefineFunction = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowDefineFunction' })) as true | false | null;
