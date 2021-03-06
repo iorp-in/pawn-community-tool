@@ -6,6 +6,7 @@ import path = require('path');
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { sequentialNumberGenerate } from './Sequance Generator';
 import { addToPawnIgnore, InitPawnIgnore } from './whitelistedpaths';
+import PawnFoldingProvider from './FoldingProvider';
 
 export let client: LanguageClient;
 
@@ -15,6 +16,9 @@ export async function activate(context: vscode.ExtensionContext) {  // The serve
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.initScanDir', InitPawnIgnore));
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.pawnignore', addToPawnIgnore));
 	context.subscriptions.push(vscode.commands.registerCommand('pawn-community-tool.reloadDefs', () => { initSnippetCollector(true); }));
+	context.subscriptions.push(vscode.languages.registerFoldingRangeProvider({ scheme: 'file', language: 'pawn' }, new PawnFoldingProvider));
+
+
 	vscode.languages.registerDocumentFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 	vscode.languages.registerDocumentRangeFormattingEditProvider('pawn', PawnDocumentFormattingEditProvider);
 
