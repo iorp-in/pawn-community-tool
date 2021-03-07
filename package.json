@@ -116,12 +116,12 @@
                 },
                 "pawn.language.startRegion": {
                     "type": "string",
-                    "default": "(//#region)|(/\\*)|\\{",
+                    "default": "(//#region)|(/\\*)|\\{|#if",
                     "description": "regex expression for start of region\nproceed with caution, you can break this so leave default if you don't know about this."
                 },
                 "pawn.language.endRegion": {
                     "type": "string",
-                    "default": "(//#endregion)|(\\*/)|\\}",
+                    "default": "(//#endregion)|(\\*/)|\\}|#endif",
                     "description": "regex expression for end of region\nproceed with caution, you can break this so leave default if you don't know about this."
                 },
                 "pawn.language.showLastLineOfRegion": {
