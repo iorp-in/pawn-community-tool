@@ -39,7 +39,8 @@
         "onCommand:pawn-community-tool.pawnignore",
         "onCommand:pawn-community-tool.initTask",
         "onCommand:pawn-community-tool.seq-num",
-        "onLanguage:pawn"
+        "onLanguage:pawn",
+        "onLanguage:Pawn"
     ],
     "main": "./out/client/extension.js",
     "contributes": {

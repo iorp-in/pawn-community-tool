@@ -38,14 +38,18 @@ connection.onInitialized(() => {
 
 connection.onNotification("revalidateAllOpenedDocuments", () => {
     resetAutocompletes();
-    documents.all().forEach(parseSnippets);
+    documents.all().forEach(doc => parseSnippets(doc));
 });
 
 connection.onDidChangeConfiguration(() => {
-    documents.all().forEach(parseSnippets);
+    documents.all().forEach(doc => parseSnippets(doc));
 });
 
 documents.onDidClose(() => {
+});
+
+documents.onDidChangeContent(change => {
+    parseSnippets(change.document, false);
 });
 
 documents.onDidSave(change => {

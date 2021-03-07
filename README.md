@@ -19,17 +19,22 @@ developed and maintained by Indian Ocean Roleplay™
 
 # Define Custom Snippet Anywhere
 
+you can define two types of snippet
+
+\*note: second type support autocompletion of parameters.
+
 ```
-/*
-    #defineSnip init_cmd cmd:function(playerid, const params[]) {\n\treturn 1;\n}
-*/
+//#snippet init_cmd cmd:myfunction(playerid, const params[]) {\n\treturn 1;\n}
+
+//#function createcar(vehicleid, Float:posX, Float:posY, Float:posZ);
 ```
 
 # Usage of .pawnignore
+
 in big projects, you might have lot's of file but you don't want definitions from all files.
 so just use .pawnignore to ignore a folder or file from workspace. The usage is very simple,
-just right click on folder or file and click on ``Add to .pawnignore`` this works exactly like
-``.gitignore``
+just right click on folder or file and click on `Add to .pawnignore` this works exactly like
+`.gitignore`
 
 # Installation
 
@@ -48,6 +53,7 @@ Alternatively, you can check out the source code or view the marketplace page:
 press Ctrl+Shift+P or F1 and then type **>Initialize Pawn Build Task**
 
 ## Explanation
+
 `"command": "${workspaceRoot}/pawno/pawncc.exe",` is the important bit here,
 this is the path to your Pawn compiler and I've assumed most of you have a
 left-over `pawno` folder from that long dead text editor! This folder not only
@@ -83,7 +89,9 @@ command palette with CTRL+Shift+P (Windows) or CMD+Shift+P (Mac) and type
 `Run Task`, hit enter and select `build-normal`.
 
 ## Important Note
+
 sometime, you will get errors lke arguments are invalid. We have seen that problem with powershell only. so make sure, you have selected cmd (commmand prompt) to build your gamemode file.
 
 # Thank you
+
 we are open for suggestions, please open a issue and share your idea so that we can improve this extension.
