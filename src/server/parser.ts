@@ -14,6 +14,7 @@ interface PawnFunction {
     params?: ParameterInformation[];
 }
 let pawnFuncCollection: Map<string, PawnFunction> = new Map();
+let pawnWords: Map<string, CompletionItem[]> = new Map();
 
 export const resetAutocompletes = () => {
     pawnFuncCollection.clear();
@@ -397,8 +398,6 @@ export const parseNatives = (textDocument: TextDocument) => {
     });
 };
 
-let pawnWords: Map<string, CompletionItem[]> = new Map();
-
 export const parseWords = (textDocument: TextDocument) => {
     const regex = /[A-Za-z_]+/gm;
     const content = textDocument.getText();
@@ -426,8 +425,8 @@ export const parseWords = (textDocument: TextDocument) => {
         }
     }
 
-    const findSnip = pawnWords.get(textDocument.uri);
-    if (findSnip === undefined) pawnWords.set(textDocument.uri, wordCompletion);
+    console.log("reading words from ", textDocument.uri, wordCompletion);
+    pawnWords.set(textDocument.uri, wordCompletion);
 };
 
 const getTextDocumentWorkspacePath = async (textDocument: TextDocument) => {
@@ -463,9 +462,9 @@ const isParseAllowed = async (textDocument: TextDocument) => {
 };
 
 export const parseSnippets = async (textDocument: TextDocument) => {
-    pawnFuncCollection.forEach((value: PawnFunction, key: string) => { if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key); });
-    const findSnip = pawnWords.get(textDocument.uri);
-    if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
+    // pawnFuncCollection.forEach((value: PawnFunction, key: string) => { if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key); });
+    // const findSnip = pawnWords.get(textDocument.uri);
+    // if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); console.log(textDocument.uri, " deleted"); }
     if (!await isParseAllowed(textDocument)) return;
 
     const allowDefine = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowDefine' })) as true | false | null;
@@ -488,6 +487,7 @@ export const doCompletion = async (params: CompletionParams) => {
     const comItems: CompletionItem[] = [];
     pawnFuncCollection.forEach(res => comItems.push(res.completion));
     const findSnip = pawnWords.get(params.textDocument.uri);
+    console.log("findSnip: ", findSnip, params.textDocument.uri);
     if (findSnip !== undefined) {
         findSnip.forEach(res => comItems.push(res));
     }
