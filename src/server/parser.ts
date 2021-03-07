@@ -424,8 +424,6 @@ export const parseWords = (textDocument: TextDocument) => {
             wordCompletion.push(newSnip);
         }
     }
-
-    console.log("reading words from ", textDocument.uri, wordCompletion);
     pawnWords.set(textDocument.uri, wordCompletion);
 };
 
@@ -464,7 +462,7 @@ const isParseAllowed = async (textDocument: TextDocument) => {
 export const parseSnippets = async (textDocument: TextDocument) => {
     // pawnFuncCollection.forEach((value: PawnFunction, key: string) => { if (value.textDocument.uri === textDocument.uri) pawnFuncCollection.delete(key); });
     // const findSnip = pawnWords.get(textDocument.uri);
-    // if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); console.log(textDocument.uri, " deleted"); }
+    // if (findSnip !== undefined) { pawnWords.delete(textDocument.uri); }
     if (!await isParseAllowed(textDocument)) return;
 
     const allowDefine = (await connection.workspace.getConfiguration({ section: 'pawn.language.allowDefine' })) as true | false | null;
@@ -487,10 +485,7 @@ export const doCompletion = async (params: CompletionParams) => {
     const comItems: CompletionItem[] = [];
     pawnFuncCollection.forEach(res => comItems.push(res.completion));
     const findSnip = pawnWords.get(params.textDocument.uri);
-    console.log("findSnip: ", findSnip, params.textDocument.uri);
-    if (findSnip !== undefined) {
-        findSnip.forEach(res => comItems.push(res));
-    }
+    if (findSnip !== undefined) findSnip.forEach(res => comItems.push(res));
     return comItems;
 };
 
