@@ -20,7 +20,7 @@ export const resetAutocompletes = () => {
 };
 
 export const parseDefine = (textDocument: TextDocument) => {
-    const regexDefine = /^(\s*)#define\s+([^\s]{1,})\s+(.*?)$/gm;
+    const regexDefine = /^(\s*)#define\s+([^\s()]{1,})\s+([^\s]{1,})$/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     splitContent.forEach((cont: string, index: number) => {
