@@ -399,7 +399,7 @@ export const parseNatives = (textDocument: TextDocument) => {
 };
 
 export const parseWords = (textDocument: TextDocument) => {
-    const regex = /[A-Za-z_]+/gm;
+    const regex = /[A-Za-z_:]+/gm;
     const content = textDocument.getText();
     const splitContent = content.split('\n');
     const words: string[] = [];
