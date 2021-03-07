@@ -48,7 +48,7 @@ connection.onDidChangeConfiguration(() => {
 documents.onDidClose(() => {
 });
 
-documents.onDidChangeContent(change => {
+documents.onDidSave(change => {
     parseSnippets(change.document);
 });
 
@@ -74,8 +74,9 @@ connection.onSignatureHelp((params: SignatureHelpParams): SignatureHelp | undefi
 });
 
 connection.onCompletion(async (params: CompletionParams) => {
-    const c: CompletionList = { isIncomplete: false, items: await doCompletion(params) };
-    return c;
+    const completionItems = await doCompletion(params);
+    if (completionItems === undefined) return undefined;
+    return { isIncomplete: false, items: completionItems };
 });
 
 connection.onCompletionResolve(
