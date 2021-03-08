@@ -7,14 +7,19 @@ interface RegexCodeFix {
 }
 
 const beforeFix: RegexCodeFix[] = [
-    { expr: /#/gm, replacement: "//#" },
-    { expr: /\bconst\b/gm, replacement: "iorp_tag_const" }
+    { expr: /#/gm, replacement: "iorp_tag_hash" },
+    { expr: /const/gm, replacement: "iorp_tag_const" },
+    { expr: /@/gm, replacement: "iorp_tag_at" },
+    { expr: /&/gm, replacement: "iorp_tag_and" },
+    { expr: /:/gm, replacement: "iorp_tag_semicolon" }
 ];
 
 const afterFix: RegexCodeFix[] = [
-    { expr: /\/\/#/gm, replacement: "#" },
-    { expr: /\biorp_tag_const\b/gm, replacement: "const" },
-    { expr: /:\s(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: ":" },
+    { expr: /iorp_tag_hash/gm, replacement: "#" },
+    { expr: /iorp_tag_const/gm, replacement: "const" },
+    { expr: /iorp_tag_at/gm, replacement: "@" },
+    { expr: /iorp_tag_and/gm, replacement: "&" },
+    { expr: /iorp_tag_semicolon/gm, replacement: ":" },
     { expr: /if(\s+)\(/gm, replacement: "if(" },
     { expr: />(\s+)\nhook/gm, replacement: ">\nhook" },
     { expr: /static(\s+)const/gm, replacement: "static const" },

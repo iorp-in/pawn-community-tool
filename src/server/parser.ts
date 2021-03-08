@@ -131,11 +131,11 @@ export const parsefuncsDefines = (textDocument: TextDocument) => {
                         params,
                         type: 'macrofunction'
                     };
-                    const indexPos = func.indexOf(':');
-                    if (indexPos !== -1) {
-                        const resOut = /:(.*)/gm.exec(func);
-                        if (resOut) func = resOut[1];
-                    }
+                    // const indexPos = func.indexOf(':');
+                    // if (indexPos !== -1) {
+                    // const resOut = /:(.*)/gm.exec(func);
+                    // if (resOut) func = resOut[1];
+                    // }
                     const findSnip = pawnFuncCollection.get(func);
                     if (findSnip === undefined) {
                         pawnFuncCollection.set(func, pwnFun);
@@ -242,11 +242,11 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
                         params,
                         type: 'customsnip'
                     };
-                    const indexPos = func.indexOf(':');
-                    if (indexPos !== -1) {
-                        const resOut = /:(.*)/gm.exec(func);
-                        if (resOut) func = resOut[1];
-                    }
+                    // const indexPos = func.indexOf(':');
+                    // if (indexPos !== -1) {
+                    // const resOut = /:(.*)/gm.exec(func);
+                    // if (resOut) func = resOut[1];
+                    // }
                     pawnFuncCollection.set(func, pwnFun);
                 }
             } while (m);
@@ -320,11 +320,11 @@ export const parsefuncs = (textDocument: TextDocument) => {
                         params,
                         type: 'function'
                     };
-                    const indexPos = func.indexOf(':');
-                    if (indexPos !== -1) {
-                        const resOut = /:(.*)/gm.exec(func);
-                        if (resOut) func = resOut[1];
-                    }
+                    // const indexPos = func.indexOf(':');
+                    // if (indexPos !== -1) {
+                    // const resOut = /:(.*)/gm.exec(func);
+                    // if (resOut) func = resOut[1];
+                    // }
                     const findSnip = pawnFuncCollection.get(func);
                     if (findSnip === undefined) {
                         pawnFuncCollection.set(func, pwnFun);
@@ -403,11 +403,11 @@ export const parsefuncsNonPrefix = (textDocument: TextDocument) => {
                         params,
                         type: 'function'
                     };
-                    const indexPos = func.indexOf(':');
-                    if (indexPos !== -1) {
-                        const resOut = /:(.*)/gm.exec(func);
-                        if (resOut) func = resOut[1];
-                    }
+                    // const indexPos = func.indexOf(':');
+                    // if (indexPos !== -1) {
+                    // const resOut = /:(.*)/gm.exec(func);
+                    // if (resOut) func = resOut[1];
+                    // }
                     const findSnip = pawnFuncCollection.get(func);
                     if (findSnip === undefined) {
                         pawnFuncCollection.set(func, pwnFun);
@@ -486,11 +486,11 @@ export const parseNatives = (textDocument: TextDocument) => {
                         params,
                         type: 'native'
                     };
-                    const indexPos = func.indexOf(':');
-                    if (indexPos !== -1) {
-                        const resOut = /:(.*)/gm.exec(func);
-                        if (resOut) func = resOut[1];
-                    }
+                    // const indexPos = func.indexOf(':');
+                    // if (indexPos !== -1) {
+                    // const resOut = /:(.*)/gm.exec(func);
+                    // if (resOut) func = resOut[1];
+                    // }
                     const findSnip = pawnFuncCollection.get(func);
                     if (findSnip === undefined) {
                         pawnFuncCollection.set(func, pwnFun);
