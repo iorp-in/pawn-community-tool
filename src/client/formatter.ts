@@ -12,6 +12,8 @@ const beforeFix: RegexCodeFix[] = [
     { expr: /@/gm, replacement: "iorp_tag_at" },
     { expr: /&/gm, replacement: "iorp_tag_and" },
     { expr: /%/gm, replacement: "iorp_tag_percentage" },
+    { expr: /</gm, replacement: "iorp_tag_arrow_left" },
+    { expr: />/gm, replacement: "iorp_tag_arrow_right" },
     { expr: /:/gm, replacement: "iorp_tag_semicolon" }
 ];
 
@@ -20,6 +22,8 @@ const afterFix: RegexCodeFix[] = [
     { expr: /iorp_tag_const/gm, replacement: "const" },
     { expr: /iorp_tag_at/gm, replacement: "@" },
     { expr: /iorp_tag_and/gm, replacement: "&" },
+    { expr: /iorp_tag_arrow_left/gm, replacement: "<" },
+    { expr: /iorp_tag_arrow_right/gm, replacement: ">" },
     { expr: /iorp_tag_percentage/gm, replacement: "%" },
     { expr: /iorp_tag_semicolon/gm, replacement: ":" },
     { expr: /if(\s+)\(/gm, replacement: "if(" },
