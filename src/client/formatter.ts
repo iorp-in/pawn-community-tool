@@ -7,33 +7,22 @@ interface RegexCodeFix {
 }
 
 const beforeFix: RegexCodeFix[] = [
-    { expr: /#/gm, replacement: "iorp_tag_hash" },
-    { expr: /const/gm, replacement: "iorp_tag_const" },
-    { expr: /@/gm, replacement: "iorp_tag_at" },
-    { expr: /&/gm, replacement: "iorp_tag_and" },
-    { expr: /%/gm, replacement: "iorp_tag_percentage" },
-    { expr: /</gm, replacement: "iorp_tag_arrow_left" },
-    { expr: />/gm, replacement: "iorp_tag_arrow_right" },
-    { expr: /=/gm, replacement: "iorp_tag_arrow_equal" },
-    { expr: /!/gm, replacement: "iorp_tag_arrow_exclamation" },
-    { expr: /:/gm, replacement: "iorp_tag_semicolon" }
+    { expr: /(^[\s]+.#|^#|^ #|^\t#)/gm, replacement: "//iorp_tag_hash$1" },
+    { expr: /([^\s:]):([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_semicolon$2" },
+    { expr: /([^\s:])::([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_two_semicolon$2" },
+    { expr: /\bconst\b/gm, replacement: "iorp_tag_const" }
 ];
 
 const afterFix: RegexCodeFix[] = [
-    { expr: /iorp_tag_hash/gm, replacement: "#" },
-    { expr: /iorp_tag_const/gm, replacement: "const" },
-    { expr: /iorp_tag_at/gm, replacement: "@" },
-    { expr: /iorp_tag_and/gm, replacement: "&" },
-    { expr: /iorp_tag_arrow_left/gm, replacement: "<" },
-    { expr: /iorp_tag_arrow_right/gm, replacement: ">" },
-    { expr: /iorp_tag_arrow_equal/gm, replacement: "=" },
-    { expr: /iorp_tag_percentage/gm, replacement: "%" },
-    { expr: /iorp_tag_arrow_exclamation/gm, replacement: "!" },
+    { expr: /\biorp_tag_const\b/gm, replacement: "const" },
     { expr: /iorp_tag_semicolon/gm, replacement: ":" },
+    { expr: /iorp_tag_two_semicolon/gm, replacement: "::" },
+    // { expr: /:\s(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: ":" },
     { expr: /if(\s+)\(/gm, replacement: "if(" },
     { expr: />(\s+)\nhook/gm, replacement: ">\nhook" },
     { expr: /static(\s+)const/gm, replacement: "static const" },
-    { expr: /\.\s\./gm, replacement: ".." }
+    { expr: /\.\s\./gm, replacement: ".." },
+    { expr: /^\/\/iorp_tag_hash([\s+]{0,}#)/gm, replacement: "$1" },
 ];
 
 const formatPawn = (content: string) => {
