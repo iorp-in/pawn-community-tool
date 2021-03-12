@@ -10,8 +10,8 @@ const beforeFix: RegexCodeFix[] = [
     { expr: /(^[ \t]+#|^#)/gm, replacement: "//iorp_tag_hash_$1" },
     { expr: /([^\s:]):([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_semicolon$2" },
     { expr: /([^\s:])::([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_two_semicolon$2" },
-    { expr: /([^\s:]): +([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_three_semicolon$2" },
     { expr: /([^\s:]):: +([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_four_semicolon$2" },
+    { expr: /([\w^\s:]): +([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_three_semicolon$2" },
     { expr: /([^\s:])@([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_at$2" },
     { expr: /\bconst\b/gm, replacement: "iorp_tag_const" },
 ];
