@@ -7,22 +7,27 @@ interface RegexCodeFix {
 }
 
 const beforeFix: RegexCodeFix[] = [
-    { expr: /(^[\s]+.#|^#|^ #|^\t#)/gm, replacement: "//iorp_tag_hash$1" },
+    { expr: /(^[ \t]+#|^#)/gm, replacement: "//iorp_tag_hash_$1" },
     { expr: /([^\s:]):([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_semicolon$2" },
     { expr: /([^\s:])::([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_two_semicolon$2" },
-    { expr: /\bconst\b/gm, replacement: "iorp_tag_const" }
+    { expr: /([^\s:]): +([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_three_semicolon$2" },
+    { expr: /([^\s:]):: +([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_four_semicolon$2" },
+    { expr: /([^\s:])@([^\s:])(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "$1iorp_tag_at$2" },
+    { expr: /\bconst\b/gm, replacement: "iorp_tag_const" },
 ];
 
 const afterFix: RegexCodeFix[] = [
     { expr: /\biorp_tag_const\b/gm, replacement: "const" },
     { expr: /iorp_tag_semicolon/gm, replacement: ":" },
     { expr: /iorp_tag_two_semicolon/gm, replacement: "::" },
-    // { expr: /:\s(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: ":" },
-    { expr: /if(\s+)\(/gm, replacement: "if(" },
+    { expr: /iorp_tag_three_semicolon/gm, replacement: ": " },
+    { expr: /iorp_tag_four_semicolon/gm, replacement: ":: " },
+    { expr: /iorp_tag_at/gm, replacement: "@" },
+    // { expr: /(^if +\(|^[ \t]+if +\()(?=(?:[^"]*"[^"]*")*[^"]*$)/gm, replacement: "if(" },
     { expr: />(\s+)\nhook/gm, replacement: ">\nhook" },
     { expr: /static(\s+)const/gm, replacement: "static const" },
     { expr: /\.\s\./gm, replacement: ".." },
-    { expr: /^\/\/iorp_tag_hash([\s+]{0,}#)/gm, replacement: "$1" },
+    { expr: /^[ \t]+\/\/iorp_tag_hash_|^\/\/iorp_tag_hash_/gm, replacement: "" },
 ];
 
 const formatPawn = (content: string) => {
