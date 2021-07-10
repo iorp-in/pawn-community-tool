@@ -77,7 +77,10 @@ export const findFunctionIdentifier = (content: string, cursorIndex: number): Fi
 
       // Identifier preceding this '(' is the function we are looking for
       // Skip all whitespaces first
-      while (isWhitespace(content[--index])) {}
+      while (isWhitespace(content[--index])) {
+        // just run this
+      }
+
       // Copy the identifier
       while (index >= 0 && isAlphaNum(content[index])) {
         identifier += content[index];
@@ -85,7 +88,9 @@ export const findFunctionIdentifier = (content: string, cursorIndex: number): Fi
       }
       // Remove all digits from the end, an identifier can't start with a digit
       let identIndex = identifier.length;
-      while (--identIndex >= 0 && isDigit(identifier[identIndex])) {}
+      while (--identIndex >= 0 && isDigit(identifier[identIndex])) {
+        // just run this
+      }
       if (identIndex !== identifier.length - 1) {
         identifier = identifier.substring(0, identIndex + 1);
       }
@@ -115,7 +120,7 @@ export const positionToIndex = (content: string, position: Position) => {
 };
 
 export const findIdentifierAtCursor = (content: string, cursorIndex: number): { identifier: string; isCallable: boolean } => {
-  let result = {
+  const result = {
     identifier: "",
     isCallable: false,
   };
@@ -142,7 +147,9 @@ export const findIdentifierAtCursor = (content: string, cursorIndex: number): { 
       // Reached the end of the identifier
       // Remove all digits from the end, an identifier can't start with a digit
       let identIndex = result.identifier.length;
-      while (--identIndex >= 0 && isDigit(result.identifier[identIndex])) {}
+      while (--identIndex >= 0 && isDigit(result.identifier[identIndex])) {
+        // just run this
+      }
       if (identIndex !== result.identifier.length - 1) {
         result.identifier = result.identifier.substring(0, identIndex + 1);
       }

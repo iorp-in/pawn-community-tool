@@ -16,10 +16,10 @@ function findFoldRanges(document: TextDocument) {
   const start = RegExp(startRegEx !== null ? startRegEx : /(\/\/#region)|(\/\*)|\{/gm); // code 1
   const end = RegExp(endRegEx !== null ? endRegEx : /(\/\/#endregion)|(\*\/)|\}/gm); // code 1
 
-  let folds: FoldingRange[] = [];
-  let customRegionCollect: number[] = [];
-  for (var i = 0; i < document.lineCount; i++) {
-    let line = document.lineAt(i).text;
+  const folds: FoldingRange[] = [];
+  const customRegionCollect: number[] = [];
+  for (let i = 0; i < document.lineCount; i++) {
+    const line = document.lineAt(i).text;
     if (start.test(line)) {
       customRegionCollect.push(i);
     }

@@ -1,4 +1,4 @@
-export var task = `{
+export const task = `{
 	"version": "2.0.0",
 	"tasks": [
 		{

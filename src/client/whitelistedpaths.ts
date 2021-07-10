@@ -31,7 +31,7 @@ export const InitPawnIgnore = async function () {
       (a: vscode.TextDocument) => {
         vscode.window.showTextDocument(a, 1, false);
       },
-      (error: any) => {
+      (error: Error) => {
         console.error(error);
       }
     );
@@ -56,7 +56,7 @@ export const addToPawnIgnore = async function (selectedFile: vscode.Uri) {
 
   if (workspacePath === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
 
-  var filePath = selectedFile.path.substr(workspacePath.length + 2, selectedFile.path.length);
+  const filePath = selectedFile.path.substr(workspacePath.length + 2, selectedFile.path.length);
   if (!filePath && filePath.length < 1) return;
 
   if (!fs.existsSync(workspacePath + "/.pawnignore")) {
@@ -67,7 +67,7 @@ export const addToPawnIgnore = async function (selectedFile: vscode.Uri) {
       (a: vscode.TextDocument) => {
         vscode.window.showTextDocument(a, 1, false);
       },
-      (error: any) => {
+      (error: Error) => {
         console.error(error);
       }
     );

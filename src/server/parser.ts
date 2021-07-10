@@ -3,7 +3,6 @@ import {
   CompletionItemKind,
   Definition,
   Location,
-  MarkedString,
   Hover,
   SignatureHelp,
   Position,
@@ -12,7 +11,7 @@ import {
   MarkupContent,
   MarkupKind,
 } from "vscode-languageserver";
-import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor, isWhitespace } from "./common";
+import { findFunctionIdentifier, positionToIndex, findIdentifierAtCursor } from "./common";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { connection } from "./server";
 import * as fs from "fs";
@@ -26,11 +25,11 @@ interface PawnFunction {
   definition: Definition;
   params?: ParameterInformation[];
 }
-let pawnFuncCollection: Map<string, PawnFunction> = new Map();
-let pawnWords: Map<string, CompletionItem[]> = new Map();
+const pawnFuncCollection: Map<string, PawnFunction> = new Map();
+const pawnWords: Map<string, CompletionItem[]> = new Map();
 
-let commentRegex = RegExp(/\/\*/gm);
-let commentEndRegex = RegExp(/\*\//gm);
+const commentRegex = RegExp(/\/\*/gm);
+const commentEndRegex = RegExp(/\*\//gm);
 
 export const resetAutocompletes = () => {
   pawnFuncCollection.clear();
@@ -47,12 +46,12 @@ export const parseDefine = (textDocument: TextDocument) => {
     } else if (commentEndRegex.test(cont)) {
       excempt--;
     } else if (excempt === 0) {
-      var m;
+      let m;
       do {
         m = regexDefine.exec(cont);
         if (m) {
-          let func = m[2];
-          let arg = m[3];
+          const func = m[2];
+          const arg = m[3];
           const newSnip: CompletionItem = {
             label: func,
             kind: CompletionItemKind.Text,
@@ -91,13 +90,13 @@ export const parsefuncsDefines = (textDocument: TextDocument) => {
     } else if (commentEndRegex.test(cont)) {
       excempt--;
     } else if (excempt === 0) {
-      var m;
+      let m;
       do {
         m = regex.exec(cont);
         if (m) {
-          let func = m[2];
-          let args = m[3];
-          let doc: string = "";
+          const func = m[2];
+          const args = m[3];
+          let doc = "";
           let endDoc = -1;
           if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf("*/");
           if (endDoc !== -1) {
@@ -181,8 +180,8 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
       do {
         fisrtReg = regexDefine.exec(cont);
         if (fisrtReg) {
-          let func = fisrtReg[1];
-          let args = fisrtReg[2];
+          const func = fisrtReg[1];
+          const args = fisrtReg[2];
           const newSnip: CompletionItem = {
             label: func,
             kind: CompletionItemKind.Function,
@@ -205,13 +204,13 @@ export const parseCustomSnip = (textDocument: TextDocument) => {
           pawnFuncCollection.set(func, pwnFun);
         }
       } while (fisrtReg);
-      var m;
+      let m;
       do {
         m = regexFunction.exec(cont);
         if (m) {
-          let func = m[1];
-          let args = m[2];
-          let doc: string = "";
+          const func = m[1];
+          const args = m[2];
+          let doc = "";
           let endDoc = -1;
           if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf("*/");
           if (endDoc !== -1) {
@@ -284,13 +283,13 @@ export const parsefuncs = (textDocument: TextDocument) => {
     } else if (commentEndRegex.test(cont)) {
       excempt--;
     } else if (excempt === 0) {
-      var m;
+      let m;
       do {
         m = regex.exec(cont);
         if (m) {
-          let func = m[3];
-          let args = m[4];
-          let doc: string = "";
+          const func = m[3];
+          const args = m[4];
+          let doc = "";
           let endDoc = -1;
           if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf("*/");
           if (endDoc !== -1) {
@@ -369,13 +368,13 @@ export const parsefuncsNonPrefix = (textDocument: TextDocument) => {
     } else if (commentEndRegex.test(cont)) {
       excempt--;
     } else if (excempt === 0) {
-      var m;
+      let m;
       do {
         m = regex.exec(cont);
         if (m) {
-          let func = m[1];
-          let args = m[2];
-          let doc: string = "";
+          const func = m[1];
+          const args = m[2];
+          let doc = "";
           let endDoc = -1;
           if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf("*/");
           if (endDoc !== -1) {
@@ -454,13 +453,13 @@ export const parseNatives = (textDocument: TextDocument) => {
     } else if (commentEndRegex.test(cont)) {
       excempt--;
     } else if (excempt === 0) {
-      var m;
+      let m;
       do {
         m = regex.exec(cont);
         if (m) {
-          let func = m[3];
-          let args = m[4];
-          let doc: string = "";
+          const func = m[3];
+          const args = m[4];
+          let doc = "";
           let endDoc = -1;
           if (splitContent[index - 1] !== undefined) endDoc = splitContent[index - 1].indexOf("*/");
           if (endDoc !== -1) {
@@ -534,13 +533,13 @@ export const parseWords = (textDocument: TextDocument) => {
   const words: string[] = [];
   const wordCompletion: CompletionItem[] = [];
   let excempt = 0;
-  splitContent.forEach((cont: string, index: number) => {
+  splitContent.forEach((cont: string) => {
     if (commentRegex.test(cont)) {
       excempt++;
     } else if (commentEndRegex.test(cont)) {
       excempt--;
     } else if (excempt === 0 && !RegExp(/^\/\//gm).test(cont.trim())) {
-      var m;
+      let m;
       do {
         m = regex.exec(cont);
         if (m) {
@@ -550,15 +549,13 @@ export const parseWords = (textDocument: TextDocument) => {
     }
   });
   for (const key in words) {
-    if (words.hasOwnProperty(key)) {
-      const element = words[key];
-      const newSnip: CompletionItem = {
-        label: element,
-        kind: CompletionItemKind.Text,
-        insertText: element,
-      };
-      wordCompletion.push(newSnip);
-    }
+    const element = words[key];
+    const newSnip: CompletionItem = {
+      label: element,
+      kind: CompletionItemKind.Text,
+      insertText: element,
+    };
+    wordCompletion.push(newSnip);
   }
   pawnWords.set(textDocument.uri, wordCompletion);
 };
@@ -595,7 +592,7 @@ const isParseAllowed = async (textDocument: TextDocument) => {
   return true;
 };
 
-export const parseSnippets = async (textDocument: TextDocument, reset: boolean = true) => {
+export const parseSnippets = async (textDocument: TextDocument, reset = true) => {
   const ext = path.extname(textDocument.uri);
   if (ext !== ".pwn" && ext !== ".inc") return false;
   if (reset) {
@@ -658,7 +655,7 @@ export const doHover = (document: TextDocument, position: Position): Hover | und
   if (result.identifier.length === 0) return undefined;
   const snip = pawnFuncCollection.get(result.identifier);
   if (snip === undefined) return undefined;
-  let markdown: MarkupContent = {
+  const markdown: MarkupContent = {
     kind: MarkupKind.Markdown,
     value: [
       "```pawn",

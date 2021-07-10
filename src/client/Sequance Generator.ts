@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 export function sequentialNumberGenerate() {
   if (vscode.window.activeTextEditor) {
-    let input = vscode.window.showInputBox({
+    const input = vscode.window.showInputBox({
       value: "1",
       placeHolder: "1 + 1",
       prompt: "<start> <operator?> <step?>",
@@ -10,7 +10,7 @@ export function sequentialNumberGenerate() {
 
     input.then((value) => {
       if (value) {
-        let options: string[] = [];
+        const options: string[] = [];
 
         value.split(" ").forEach((element) => {
           if (element) {
@@ -18,7 +18,7 @@ export function sequentialNumberGenerate() {
           }
         });
 
-        let start = options[0] ? options[0] : "1";
+        const start = options[0] ? options[0] : "1";
         let operator = "+";
         let step = "1";
 

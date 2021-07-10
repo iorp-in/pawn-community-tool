@@ -36,7 +36,7 @@ const BuildTaskHandler = async function () {
     (a: vscode.TextDocument) => {
       vscode.window.showTextDocument(a, 1, false);
     },
-    (error: any) => {
+    (error: Error) => {
       console.error(error);
     }
   );

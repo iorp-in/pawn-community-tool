@@ -9,20 +9,18 @@ import {
   DefinitionParams,
   SignatureHelpParams,
   SignatureHelp,
-  CompletionList,
   CompletionParams,
-  WorkspaceFolder,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp, resetAutocompletes } from "./parser";
 
-export let connection = createConnection(ProposedFeatures.all);
-export let documents = new TextDocuments(TextDocument);
+export const connection = createConnection(ProposedFeatures.all);
+export const documents = new TextDocuments(TextDocument);
 documents.listen(connection);
 connection.listen();
 
-connection.onInitialize((InitializeParams) => {
+connection.onInitialize(() => {
   return {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Full,
@@ -44,7 +42,7 @@ connection.onInitialize((InitializeParams) => {
   };
 });
 
-connection.onInitialized(() => {});
+// connection.onInitialized(() => {});
 
 connection.onNotification("revalidateAllOpenedDocuments", () => {
   resetAutocompletes();
@@ -55,7 +53,7 @@ connection.onDidChangeConfiguration(() => {
   documents.all().forEach((doc) => parseSnippets(doc));
 });
 
-documents.onDidClose(() => {});
+// documents.onDidClose(() => {});
 
 documents.onDidChangeContent((change) => {
   parseSnippets(change.document, false);
@@ -65,7 +63,7 @@ documents.onDidSave((change) => {
   parseSnippets(change.document);
 });
 
-connection.onDidChangeWatchedFiles((_change) => {});
+// connection.onDidChangeWatchedFiles((_change) => {});
 
 connection.onDefinition((textDocumentIdentifier: DefinitionParams) => {
   const doc = documents.get(textDocumentIdentifier.textDocument.uri);

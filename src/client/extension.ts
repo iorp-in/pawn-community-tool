@@ -28,11 +28,11 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.languages.registerDocumentFormattingEditProvider("pawn", PawnDocumentFormattingEditProvider);
   vscode.languages.registerDocumentRangeFormattingEditProvider("pawn", PawnDocumentFormattingEditProvider);
 
-  vscode.workspace.onDidChangeWorkspaceFolders((res) => {
+  vscode.workspace.onDidChangeWorkspaceFolders(() => {
     initSnippetCollector(true);
   });
 
-  vscode.workspace.onDidRenameFiles((e) => {
+  vscode.workspace.onDidRenameFiles(() => {
     initSnippetCollector(true);
   });
 
@@ -40,12 +40,12 @@ export async function activate(context: vscode.ExtensionContext) {
     if (path.basename(e.fileName) === ".pawnignore") initSnippetCollector(true);
   });
 
-  let serverModule = context.asAbsolutePath(path.join("out", "server", "server.js"));
-  let debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
+  const serverModule = context.asAbsolutePath(path.join("out", "server", "server.js"));
+  const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
 
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
-  let serverOptions: ServerOptions = {
+  const serverOptions: ServerOptions = {
     run: { module: serverModule, transport: TransportKind.ipc },
     debug: {
       module: serverModule,
@@ -55,7 +55,7 @@ export async function activate(context: vscode.ExtensionContext) {
   };
 
   // Options to control the language client
-  let clientOptions: LanguageClientOptions = {
+  const clientOptions: LanguageClientOptions = {
     // Register the server for plain text documents
     documentSelector: [{ scheme: "file", language: "pawn" }],
     synchronize: {
