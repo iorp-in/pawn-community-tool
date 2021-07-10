@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import { initSnippetCollector } from './commonFunc';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import { initSnippetCollector } from "./commonFunc";
 
 const noWorkSpaceError = "you can use this command inside your workspace only";
 const writeonfile = `// How to use? right click on file or folder of your workspace to add into .pawnignore
@@ -9,66 +9,76 @@ const writeonfile = `// How to use? right click on file or folder of your worksp
 `;
 
 export const InitPawnIgnore = async function () {
-    let workspacePath = undefined;
-    if (vscode.workspace.workspaceFolders === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
-    if (vscode.workspace.workspaceFolders.length === 0) return vscode.window.showInformationMessage(noWorkSpaceError);
-    if (vscode.workspace.workspaceFolders.length === 1) { workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath; }
+  let workspacePath = undefined;
+  if (vscode.workspace.workspaceFolders === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
+  if (vscode.workspace.workspaceFolders.length === 0) return vscode.window.showInformationMessage(noWorkSpaceError);
+  if (vscode.workspace.workspaceFolders.length === 1) {
+    workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+  }
 
-    if (vscode.workspace.workspaceFolders.length > 1) {
-        const result = await vscode.window.showWorkspaceFolderPick();
-        if (result === undefined) return;
-        workspacePath = result.uri.fsPath;
-    }
+  if (vscode.workspace.workspaceFolders.length > 1) {
+    const result = await vscode.window.showWorkspaceFolderPick();
+    if (result === undefined) return;
+    workspacePath = result.uri.fsPath;
+  }
 
-    if (workspacePath === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
+  if (workspacePath === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
 
-    if (!fs.existsSync(workspacePath + "/.pawnignore")) {
-        fs.writeFileSync(workspacePath + "/.pawnignore", writeonfile);
-        vscode.window.showInformationMessage("created file .pawnignore");
-        vscode.workspace.openTextDocument(workspacePath + "/.pawnignore").then((a: vscode.TextDocument) => {
-            vscode.window.showTextDocument(a, 1, false);
-        }, (error: any) => {
-            console.error(error);
-        });
-    }
-    else { vscode.window.showInformationMessage(".pawnignore already exists, aborting task"); }
+  if (!fs.existsSync(workspacePath + "/.pawnignore")) {
+    fs.writeFileSync(workspacePath + "/.pawnignore", writeonfile);
+    vscode.window.showInformationMessage("created file .pawnignore");
+    vscode.workspace.openTextDocument(workspacePath + "/.pawnignore").then(
+      (a: vscode.TextDocument) => {
+        vscode.window.showTextDocument(a, 1, false);
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  } else {
+    vscode.window.showInformationMessage(".pawnignore already exists, aborting task");
+  }
 };
 
 export const addToPawnIgnore = async function (selectedFile: vscode.Uri) {
-    let workspacePath = undefined;
-    if (vscode.workspace.workspaceFolders === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
-    if (vscode.workspace.workspaceFolders.length === 0) return vscode.window.showInformationMessage(noWorkSpaceError);
-    if (vscode.workspace.workspaceFolders.length === 1) { workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath; }
+  let workspacePath = undefined;
+  if (vscode.workspace.workspaceFolders === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
+  if (vscode.workspace.workspaceFolders.length === 0) return vscode.window.showInformationMessage(noWorkSpaceError);
+  if (vscode.workspace.workspaceFolders.length === 1) {
+    workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+  }
 
-    if (vscode.workspace.workspaceFolders.length > 1) {
-        const result = await vscode.window.showWorkspaceFolderPick();
-        if (result === undefined) return;
-        workspacePath = result.uri.fsPath;
-    }
+  if (vscode.workspace.workspaceFolders.length > 1) {
+    const result = await vscode.window.showWorkspaceFolderPick();
+    if (result === undefined) return;
+    workspacePath = result.uri.fsPath;
+  }
 
-    if (workspacePath === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
+  if (workspacePath === undefined) return vscode.window.showInformationMessage(noWorkSpaceError);
 
-    var filePath = selectedFile.path.substr(workspacePath.length + 2, selectedFile.path.length);
-    if (!filePath && filePath.length < 1) return;
+  var filePath = selectedFile.path.substr(workspacePath.length + 2, selectedFile.path.length);
+  if (!filePath && filePath.length < 1) return;
 
-    if (!fs.existsSync(workspacePath + "/.pawnignore")) {
-        fs.writeFileSync(workspacePath + "/.pawnignore", writeonfile);
-        vscode.window.showInformationMessage("created file .pawnignore");
+  if (!fs.existsSync(workspacePath + "/.pawnignore")) {
+    fs.writeFileSync(workspacePath + "/.pawnignore", writeonfile);
+    vscode.window.showInformationMessage("created file .pawnignore");
 
-        vscode.workspace.openTextDocument(workspacePath + "/.pawnignore").then((a: vscode.TextDocument) => {
-            vscode.window.showTextDocument(a, 1, false);
-        }, (error: any) => {
-            console.error(error);
-        });
-    }
+    vscode.workspace.openTextDocument(workspacePath + "/.pawnignore").then(
+      (a: vscode.TextDocument) => {
+        vscode.window.showTextDocument(a, 1, false);
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
 
-    const data = fs.readFileSync(workspacePath + "/.pawnignore", { encoding: 'utf-8' });
-    if (data.indexOf(filePath) !== -1) return vscode.window.showInformationMessage(`${filePath} already exist in .pawnignore`);
+  const data = fs.readFileSync(workspacePath + "/.pawnignore", { encoding: "utf-8" });
+  if (data.indexOf(filePath) !== -1) return vscode.window.showInformationMessage(`${filePath} already exist in .pawnignore`);
 
-    fs.appendFile(workspacePath + "/.pawnignore", `\n${filePath}`, function (err) {
-        if (err) return vscode.window.showInformationMessage(`unable to add ${filePath} to .pawnignore`);
-        initSnippetCollector(true);
-        return vscode.window.showInformationMessage(`added ${filePath} to .pawnignore`);
-    });
-
+  fs.appendFile(workspacePath + "/.pawnignore", `\n${filePath}`, function (err) {
+    if (err) return vscode.window.showInformationMessage(`unable to add ${filePath} to .pawnignore`);
+    initSnippetCollector(true);
+    return vscode.window.showInformationMessage(`added ${filePath} to .pawnignore`);
+  });
 };

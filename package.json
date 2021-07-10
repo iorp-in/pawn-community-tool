@@ -1,213 +1,201 @@
 {
-    "name": "pawn-community-tool",
-    "displayName": "Pawn Community Tool",
-    "description": "Pawn Tool for Developing Scripts for Indian Ocean Roleplay™",
-    "version": "1.87.0",
-    "publisher": "IORP",
-    "engines": {
-        "vscode": "^1.34.0"
-    },
-    "bugs": {
-        "url": "https://github.com/oceanroleplay/pawn-community-tool/issues",
-        "email": "indianoceanroleplay@gmail.com"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/oceanroleplay/pawn-community-tool.git"
-    },
-    "icon": "iorp.png",
-    "categories": [
-        "Programming Languages",
-        "Formatters",
-        "Snippets",
-        "Other"
-    ],
-    "keywords": [
-        "iorp",
-        "India",
-        "multiplayer",
-        "Ocean",
-        "Roleplay",
-        "samp",
-        "vscode",
-        "pawn",
-        "language",
-        "new"
-    ],
-    "activationEvents": [
-        "onCommand:pawn-community-tool.initScanDir",
-        "onCommand:pawn-community-tool.pawnignore",
-        "onCommand:pawn-community-tool.initTask",
-        "onCommand:pawn-community-tool.seq-num",
-        "onLanguage:pawn",
-        "onLanguage:Pawn"
-    ],
-    "main": "./out/client/extension.js",
-    "contributes": {
-        "languages": [
-            {
-                "id": "pawn",
-                "aliases": [
-                    "Pawn",
-                    "pawn"
-                ],
-                "extensions": [
-                    ".pawnignore",
-                    ".p",
-                    ".pwn",
-                    ".inc"
-                ],
-                "configuration": "./language-configuration.json"
-            }
+  "name": "pawn-community-tool",
+  "displayName": "Pawn Community Tool",
+  "description": "Pawn Tool for Developing Scripts for Indian Ocean Roleplay™",
+  "version": "1.87.0",
+  "publisher": "IORP",
+  "engines": {
+    "vscode": "^1.58.0"
+  },
+  "bugs": {
+    "url": "https://github.com/oceanroleplay/pawn-community-tool/issues",
+    "email": "indianoceanroleplay@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oceanroleplay/pawn-community-tool.git"
+  },
+  "icon": "iorp.png",
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "iorp",
+    "India",
+    "multiplayer",
+    "Ocean",
+    "Roleplay",
+    "samp",
+    "vscode",
+    "pawn",
+    "language",
+    "new"
+  ],
+  "activationEvents": [
+    "onCommand:pawn-community-tool.initScanDir",
+    "onCommand:pawn-community-tool.pawnignore",
+    "onCommand:pawn-community-tool.initTask",
+    "onCommand:pawn-community-tool.seq-num",
+    "onLanguage:pawn",
+    "onLanguage:Pawn"
+  ],
+  "main": "./out/client/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "pawn",
+        "aliases": [
+          "Pawn",
+          "pawn"
         ],
-        "grammars": [
-            {
-                "language": "pawn",
-                "scopeName": "source.pawn",
-                "path": "./syntaxes/Pawn.tmLanguage"
-            }
+        "extensions": [
+          ".pawnignore",
+          ".p",
+          ".pwn",
+          ".inc"
         ],
-        "configuration": {
-            "id": "pawn",
-            "type": "object",
-            "title": "Pawn Community Tool",
-            "properties": {
-                "pawn.language.brace_style": {
-                    "type": "string",
-                    "default": "preserve-inline",
-                    "description": "Format keep your code in your choosen brace style",
-                    "enum": [
-                        "preserve-inline",
-                        "collapse",
-                        "expand",
-                        "end-expand",
-                        "none"
-                    ]
-                },
-                "pawn.language.allowDefine": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Allow to collect #define for auto completion"
-                },
-                "pawn.language.allowDefineFunction": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Allow to collect #define (function style) for auto completion"
-                },
-                "pawn.language.allowFunction": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Allow to collect functions for auto completion"
-                },
-                "pawn.language.allowNatives": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Allow to collect natives for auto completion"
-                },
-                "pawn.language.allowWords": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Allow to collect words from document for auto completion"
-                },
-                "pawn.language.allowCustomSnip": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "Allow to collect #defineSnip for auto completion"
-                },
-                "pawn.language.startRegion": {
-                    "type": "string",
-                    "default": "(//#region)|(/\\*)|\\{|#if",
-                    "description": "regex expression for start of region\nproceed with caution, you can break this so leave default if you don't know about this."
-                },
-                "pawn.language.endRegion": {
-                    "type": "string",
-                    "default": "(//#endregion)|(\\*/)|\\}|#endif",
-                    "description": "regex expression for end of region\nproceed with caution, you can break this so leave default if you don't know about this."
-                },
-                "pawn.language.showLastLineOfRegion": {
-                    "type": "boolean",
-                    "default": "true",
-                    "description": "enable to view last line of region section when it's collaped, if you select false then only first line will be visible."
-                }
-            }
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pawn",
+        "scopeName": "source.pawn",
+        "path": "./syntaxes/Pawn.tmLanguage"
+      }
+    ],
+    "configuration": {
+      "id": "pawn",
+      "type": "object",
+      "title": "Pawn Community Tool",
+      "properties": {
+        "pawn.language.brace_style": {
+          "type": "string",
+          "default": "preserve-inline",
+          "description": "Format keep your code in your choosen brace style",
+          "enum": [
+            "preserve-inline",
+            "collapse",
+            "expand",
+            "end-expand",
+            "none"
+          ]
         },
-        "problemMatchers": [
-            {
-                "name": "pawncc",
-                "owner": "pawn",
-                "fileLocation": [
-                    "relative",
-                    "${workspaceRoot}/gamemodes"
-                ],
-                "pattern": {
-                    "regexp": "^(.*?)\\(([0-9]*)[- 0-9]*\\) \\: (fatal error|error|warning) [0-9]*\\: (.*)$",
-                    "file": 1,
-                    "location": 2,
-                    "severity": 3,
-                    "message": 4
-                }
-            }
-        ],
-        "commands": [
-            {
-                "command": "pawn-community-tool.initScanDir",
-                "title": "Pawn Community Tool: Initialize .pawnignore"
-            },
-            {
-                "command": "pawn-community-tool.initTask",
-                "title": "Pawn Community Tool: Initialize Pawn Build Task"
-            },
-            {
-                "command": "pawn-community-tool.seq-num",
-                "title": "Pawn Community Tool: Generate Number Sequance"
-            },
-            {
-                "command": "pawn-community-tool.pawnignore",
-                "title": "Add to .pawnignore"
-            },
-            {
-                "command": "pawn-community-tool.reloadDefs",
-                "title": "Pawn Community Tool: reload definitions"
-            }
-        ],
-        "menus": {
-            "explorer/context": [
-                {
-                    "command": "pawn-community-tool.pawnignore",
-                    "group": "navigation"
-                }
-            ]
+        "pawn.language.allowDefine": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Allow to collect #define for auto completion"
+        },
+        "pawn.language.allowDefineFunction": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Allow to collect #define (function style) for auto completion"
+        },
+        "pawn.language.allowFunction": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Allow to collect functions for auto completion"
+        },
+        "pawn.language.allowNatives": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Allow to collect natives for auto completion"
+        },
+        "pawn.language.allowWords": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Allow to collect words from document for auto completion"
+        },
+        "pawn.language.allowCustomSnip": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Allow to collect #defineSnip for auto completion"
+        },
+        "pawn.language.startRegion": {
+          "type": "string",
+          "default": "(//#region)|(/\\*)|\\{|#if",
+          "description": "regex expression for start of region\nproceed with caution, you can break this so leave default if you don't know about this."
+        },
+        "pawn.language.endRegion": {
+          "type": "string",
+          "default": "(//#endregion)|(\\*/)|\\}|#endif",
+          "description": "regex expression for end of region\nproceed with caution, you can break this so leave default if you don't know about this."
+        },
+        "pawn.language.showLastLineOfRegion": {
+          "type": "boolean",
+          "default": "true",
+          "description": "enable to view last line of region section when it's collaped, if you select false then only first line will be visible."
         }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "build:snippets": "ts-node scripts/generateSnippets.ts",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test",
-        "publish": "vsce publish minor"
-    },
-    "dependencies": {
-        "@types/json5": "^2.2.0",
-        "@types/minimatch": "^3.0.3",
-        "@types/vscode": "^1.53.0",
-        "fs": "0.0.1-security",
-        "glob": "^7.1.6",
-        "js-beautify": "^1.13.5",
-        "json-concat": "0.0.1",
-        "json-merger": "^1.1.5",
-        "json5": "^2.2.0",
-        "minimatch": "^3.0.4",
-        "path": "^0.12.7",
-        "vscode-languageclient": "^7.0.0",
-        "vscode-languageserver": "^7.0.0",
-        "vscode-languageserver-textdocument": "^1.0.1"
-    },
-    "devDependencies": {
-        "@types/glob": "^7.1.3",
-        "@types/js-beautify": "^1.13.1",
-        "@types/node": "^13.13.41",
-        "vscode": "^1.1.37"
+    "problemMatchers": [
+      {
+        "name": "pawncc",
+        "owner": "pawn",
+        "fileLocation": [
+          "relative",
+          "${workspaceRoot}/gamemodes"
+        ],
+        "pattern": {
+          "regexp": "^(.*?)\\(([0-9]*)[- 0-9]*\\) \\: (fatal error|error|warning) [0-9]*\\: (.*)$",
+          "file": 1,
+          "location": 2,
+          "severity": 3,
+          "message": 4
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "pawn-community-tool.initScanDir",
+        "title": "Pawn Community Tool: Initialize .pawnignore"
+      },
+      {
+        "command": "pawn-community-tool.initTask",
+        "title": "Pawn Community Tool: Initialize Pawn Build Task"
+      },
+      {
+        "command": "pawn-community-tool.seq-num",
+        "title": "Pawn Community Tool: Generate Number Sequance"
+      },
+      {
+        "command": "pawn-community-tool.pawnignore",
+        "title": "Add to .pawnignore"
+      },
+      {
+        "command": "pawn-community-tool.reloadDefs",
+        "title": "Pawn Community Tool: reload definitions"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "pawn-community-tool.pawnignore",
+          "group": "navigation"
+        }
+      ]
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "build:snippets": "ts-node scripts/generateSnippets.ts",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "publish": "vsce publish minor"
+  },
+  "dependencies": {
+    "@types/vscode": "^1.58.0",
+    "js-beautify": "^1.13.5",
+    "vscode-languageclient": "^7.0.0",
+    "vscode-languageserver": "^7.0.0",
+    "vscode-languageserver-textdocument": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/js-beautify": "^1.13.1",
+    "@types/node": "^16.3.1"
+  }
 }

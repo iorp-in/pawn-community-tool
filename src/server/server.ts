@@ -1,10 +1,21 @@
 import {
-    createConnection, TextDocuments, ProposedFeatures, CompletionItem, TextDocumentPositionParams, TextDocumentSyncKind,
-    Hover, DefinitionParams, SignatureHelpParams, SignatureHelp, CompletionList, CompletionParams, WorkspaceFolder
-} from 'vscode-languageserver/node';
+  createConnection,
+  TextDocuments,
+  ProposedFeatures,
+  CompletionItem,
+  TextDocumentPositionParams,
+  TextDocumentSyncKind,
+  Hover,
+  DefinitionParams,
+  SignatureHelpParams,
+  SignatureHelp,
+  CompletionList,
+  CompletionParams,
+  WorkspaceFolder,
+} from "vscode-languageserver/node";
 
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp, resetAutocompletes } from './parser';
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { parseSnippets, doCompletion, doCompletionResolve, doGoToDef, doHover, doSignHelp, resetAutocompletes } from "./parser";
 
 export let connection = createConnection(ProposedFeatures.all);
 export let documents = new TextDocuments(TextDocument);
@@ -12,79 +23,74 @@ documents.listen(connection);
 connection.listen();
 
 connection.onInitialize((InitializeParams) => {
-    return {
-        capabilities: {
-            textDocumentSync: TextDocumentSyncKind.Full,
-            // Tell the client that the server supports code completion
-            completionProvider: {
-                resolveProvider: true
-            },
-            definitionProvider: true,
-            hoverProvider: true,
-            signatureHelpProvider: {
-                triggerCharacters: ['(', ',']
-            },
-            workspace: {
-                workspaceFolders: {
-                    supported: true
-                }
-            }
-        }
-    };
+  return {
+    capabilities: {
+      textDocumentSync: TextDocumentSyncKind.Full,
+      // Tell the client that the server supports code completion
+      completionProvider: {
+        resolveProvider: true,
+      },
+      definitionProvider: true,
+      hoverProvider: true,
+      signatureHelpProvider: {
+        triggerCharacters: ["(", ","],
+      },
+      workspace: {
+        workspaceFolders: {
+          supported: true,
+        },
+      },
+    },
+  };
 });
 
-connection.onInitialized(() => {
-});
+connection.onInitialized(() => {});
 
 connection.onNotification("revalidateAllOpenedDocuments", () => {
-    resetAutocompletes();
-    documents.all().forEach(doc => parseSnippets(doc));
+  resetAutocompletes();
+  documents.all().forEach((doc) => parseSnippets(doc));
 });
 
 connection.onDidChangeConfiguration(() => {
-    documents.all().forEach(doc => parseSnippets(doc));
+  documents.all().forEach((doc) => parseSnippets(doc));
 });
 
-documents.onDidClose(() => {
+documents.onDidClose(() => {});
+
+documents.onDidChangeContent((change) => {
+  parseSnippets(change.document, false);
 });
 
-documents.onDidChangeContent(change => {
-    parseSnippets(change.document, false);
+documents.onDidSave((change) => {
+  parseSnippets(change.document);
 });
 
-documents.onDidSave(change => {
-    parseSnippets(change.document);
-});
-
-connection.onDidChangeWatchedFiles(_change => {
-});
+connection.onDidChangeWatchedFiles((_change) => {});
 
 connection.onDefinition((textDocumentIdentifier: DefinitionParams) => {
-    const doc = documents.get(textDocumentIdentifier.textDocument.uri);
-    if (doc === undefined) return;
-    return doGoToDef(doc, textDocumentIdentifier.position);
+  const doc = documents.get(textDocumentIdentifier.textDocument.uri);
+  if (doc === undefined) return;
+  return doGoToDef(doc, textDocumentIdentifier.position);
 });
 
 connection.onHover((params: TextDocumentPositionParams): Hover | undefined => {
-    const doc = documents.get(params.textDocument.uri);
-    if (doc === undefined) return;
-    return doHover(doc, params.position);
+  const doc = documents.get(params.textDocument.uri);
+  if (doc === undefined) return;
+  return doHover(doc, params.position);
 });
 
 connection.onSignatureHelp((params: SignatureHelpParams): SignatureHelp | undefined => {
-    const doc = documents.get(params.textDocument.uri);
-    if (doc === undefined) return;
-    return doSignHelp(doc, params.position);
+  const doc = documents.get(params.textDocument.uri);
+  if (doc === undefined) return;
+  return doSignHelp(doc, params.position);
 });
 
 connection.onCompletion(async (params: CompletionParams) => {
-    const completionItems = await doCompletion(params);
-    if (completionItems === undefined) return undefined;
-    return { isIncomplete: false, items: completionItems };
+  const completionItems = await doCompletion(params);
+  if (completionItems === undefined) return undefined;
+  return { isIncomplete: false, items: completionItems };
 });
 
-connection.onCompletionResolve(
-    async (item: CompletionItem): Promise<CompletionItem> => {
-        return await doCompletionResolve(item);
-    }
-);
+connection.onCompletionResolve(async (item: CompletionItem): Promise<CompletionItem> => {
+  return await doCompletionResolve(item);
+});
