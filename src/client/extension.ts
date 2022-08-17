@@ -3,7 +3,7 @@ import PawnDocumentFormattingEditProvider from "./formatter";
 import * as vscode from "vscode";
 import { initSnippetCollector } from "./commonFunc";
 import path = require("path");
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient/node";
+import { LanguageClient, LanguageClientOptions, ServerOptions, State, TransportKind } from "vscode-languageclient/node";
 import { sequentialNumberGenerate } from "./Sequance Generator";
 import { addToPawnIgnore, InitPawnIgnore } from "./whitelistedpaths";
 import PawnFoldingProvider from "./FoldingProvider";
@@ -69,8 +69,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
   // Start the client. This will also launch the server
   client.start();
-  client.onReady().then(() => {
-    initSnippetCollector();
+  client.onDidChangeState((e) => {
+    if (e.newState === State.Running) {
+      initSnippetCollector();
+    }
   });
 }
 
