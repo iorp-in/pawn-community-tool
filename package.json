@@ -2,7 +2,7 @@
   "name": "pawn-community-tool",
   "displayName": "Pawn Community Tool",
   "description": "Pawn Tool for Developing Scripts for Indian Ocean Roleplay™",
-  "version": "1.90.0",
+  "version": "1.91.0",
   "publisher": "IORP",
   "engines": {
     "vscode": "^1.30.0"
